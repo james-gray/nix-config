@@ -42,20 +42,21 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-
-  # Enable the Gnome DE
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.hardware.openrgb.enable = true;
-
   services.xrdp.enable = true;
+
+  # Enable OpenRGB
+  services.hardware.openrgb.enable = true;
 
   # Configure keymap in X11
   services.xserver = {
     layout = "us";
     xkbVariant = "";
+    enable = true;
+    desktopManager = {
+      xterm.enable = false;
+      xfce.enable = true;
+    };
+    displayManager.defaultSession = "xfce";
   };
 
   # Enable CUPS to print documents.
@@ -90,6 +91,7 @@
       firefox
       neofetch
       konsole
+      powertop
     ];
   };
 
@@ -125,8 +127,6 @@
     PasswordAuthentication = true;
     UseDns = false;
   };
-
-  services.flatpak.enable = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 22 ];
