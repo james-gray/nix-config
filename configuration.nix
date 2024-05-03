@@ -23,6 +23,11 @@
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.networkmanager.extraConfig = ''
+    [connection]
+    wifi.wake-on-wlan = magic
+    ethernet.wake-on-lan = magic
+  '';
 
   # Set your time zone.
   time.timeZone = "America/Vancouver";
