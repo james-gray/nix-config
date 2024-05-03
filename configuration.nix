@@ -51,12 +51,6 @@
   services.xserver = {
     layout = "us";
     xkbVariant = "";
-    enable = true;
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-    };
-    displayManager.defaultSession = "xfce";
   };
 
   # Enable CUPS to print documents.
