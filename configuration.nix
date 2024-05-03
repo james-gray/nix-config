@@ -42,7 +42,7 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  services.xrdp.enable = true;
+  services.tailscale.enable = true;
 
   # Enable OpenRGB
   services.hardware.openrgb.enable = true;
@@ -102,6 +102,8 @@
     lm_sensors
     beep
     htop
+    ethtool
+    smartmontools
   ];
   environment.variables.EDITOR = "vim";
 
@@ -124,6 +126,20 @@
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.interfaces.wlo1.wakeOnLan = {
+    enable = true;
+  };
+  networking.interfaces.eno2.wakeOnLan = {
+    enable = true;
+  };
+
+  # Disable sleep! Servers can sleep when they're dead!
+  systemd.sleep.extraConfig = ''
+    AllowSuspend=no
+    AllowHibernation=no
+    AllowHybridSleep=no
+    AllowSuspendThenHibernate=no
+  '';
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
