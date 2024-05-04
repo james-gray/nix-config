@@ -90,6 +90,7 @@
     extraGroups = [ "networkmanager" "wheel" ];
     shell = zsh;
   };
+  users.motd = "I'm sorry, Dave, I'm afraid I can't do that.";
   programs.zsh.enable = true;
   programs.zsh.interactiveShellInit = ''
     neofetch
