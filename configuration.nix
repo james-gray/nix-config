@@ -8,6 +8,8 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
+      # Include Home Manager configuration
+      <home-manager/nixos>
     ];
 
   # Bootloader.
@@ -82,16 +84,91 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jamesgray = {
+  users.users.jamesgray = with pkgs; {
     isNormalUser = true;
     description = "James Gray";
     extraGroups = [ "networkmanager" "wheel" ];
-    packages = with pkgs; [
+    shell = zsh;
+  };
+  programs.zsh.enable = true;
+  programs.zsh.interactiveShellInit = ''
+    neofetch
+    export GIT_EDITOR="`which vim`"
+    export EDITOR="`which vim`"
+  '';
+
+  # Setup home-manager user config
+  home-manager.users.jamesgray = { pkgs, ... }: {
+    home.stateVersion = "23.11";
+    home.packages = with pkgs; [
       firefox
       neofetch
       konsole
       powertop
     ];
+    programs.zsh = {
+      enable = true;
+      enableCompletion = true;
+      enableAutosuggestions = true;
+      syntaxHighlighting.enable = true;
+
+      shellAliases = {
+        ls = "ls -lah";
+        update = "sudo nixos-rebuild switch";
+        conf = "vim ~/code/nix-config/configuration.nix";
+        ncf = "cd ~/code/nix-config";
+        ga = "git add";
+        gc = "git commit";
+        gap = "git add -p";
+        gp = "git push";
+        gl = "git log";
+        gs = "git status";
+        gd = "git diff";
+        gdo = "git diff origin/master";
+        gdc = "git diff --cached";
+        gcm = "git commit -m";
+        gcam = "git commit -am";
+        gbr = "git branch";
+        gco = "git checkout";
+        gcob = "git checkout -b";
+        gra = "git remote add";
+        grr = "git remote rm";
+        gpu = "git pull";
+        gcl = "git clone";
+        gf = "git fetch";
+        gg = "git grep -i";
+        gmg = "git merge";
+        grb = "git rebase";
+        gpop = "git reset HEAD^";
+        gmf = "git merge --ff-only";
+        grst = "git reset";
+        gb = "git blame";
+        gst = "git stash";
+        gsta = "git stash apply";
+      };
+      history.size = 10000;
+      history.path = "/home/jamesgray/.zsh_history";
+
+      plugins = [
+        {
+          name = "powerlevel10k";
+          src = pkgs.zsh-powerlevel10k;
+          file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
+        }
+        {
+          name = "powerlevel10k-config";
+          src = ./p10k-config;
+          file = "p10k.zsh";
+        }
+      ];
+
+      oh-my-zsh = {
+        enable = true;
+        plugins = [
+          "git"
+        ];
+      };
+    };
   };
 
   # Allow unfree packages
