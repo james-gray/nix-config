@@ -239,6 +239,7 @@
         syntax on
       '';
     };
+
     programs.zsh = {
       enable = true;
       enableCompletion = true;
@@ -338,6 +339,8 @@
     PasswordAuthentication = true;
     UseDns = false;
   };
+
+  programs.ssh.startAgent = true;
 
   # Open ports in the firewall.
   networking.firewall.allowedTCPPorts = [ 22 ];
