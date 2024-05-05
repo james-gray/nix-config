@@ -114,6 +114,7 @@
   };
 
   services.tailscale.enable = true;
+  services.tailscale.useRoutingFeatures = "server";
 
   # Enable OpenRGB
   services.hardware.openrgb.enable = true;
@@ -319,7 +320,7 @@
 
       shellAliases = {
         ls = "ls -lah";
-        update = "sudo nixos-rebuild switch";
+        rebuild = "sudo nixos-rebuild switch";
         conf = "vim ~/code/nix-config/configuration.nix";
         ncf = "cd ~/code/nix-config";
         ga = "git add";
@@ -415,8 +416,9 @@
 
   # Open ports in the firewall.
   networking.firewall.enable = true;
+  networking.firewall.trustedInterfaces = [ "tailscale0" ];
   networking.firewall.allowedTCPPorts = [ 22 2049 ];
-  networking.firewall.allowedUDPPorts = [ 22 2049 ];
+  networking.firewall.allowedUDPPorts = [ 22 2049 config.services.tailscale.port ];
   networking.interfaces.wlo1.wakeOnLan = {
     enable = true;
   };
@@ -431,9 +433,6 @@
     AllowHybridSleep=no
     AllowSuspendThenHibernate=no
   '';
-  # networking.firewall.allowedUDPPorts = [ ... ];
-  # Or disable the firewall altogether.
-  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
