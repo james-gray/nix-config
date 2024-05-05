@@ -34,6 +34,16 @@
     ethernet.wake-on-lan = magic
   '';
 
+  # NFS configuration
+  # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank/example):
+  # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank/example
+  # This enables hosts on the tailnet to mount the share r/w, and files created will be owned by jamesgray:users.
+  #
+  # TODO: See about reassigning client ips to tighten up the tailnet subnet mask
+  services.nfs.server = {
+    enable = true;
+  };
+
   # Set your time zone.
   time.timeZone = "America/Vancouver";
 
@@ -345,7 +355,9 @@
   programs.ssh.startAgent = true;
 
   # Open ports in the firewall.
-  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.enable = true;
+  networking.firewall.allowedTCPPorts = [ 22 2049 ];
+  networking.firewall.allowedUDPPorts = [ 22 2049 ];
   networking.interfaces.wlo1.wakeOnLan = {
     enable = true;
   };
