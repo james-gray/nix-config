@@ -12,19 +12,22 @@
       <home-manager/nixos>
     ];
 
-  # Bootloader.
+  # Bootloader
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  networking.hostName = "hal9000"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
-  # Configure network proxy if necessary
-  # networking.proxy.default = "http://user:password@proxy:port/";
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
+  # ZFS
+  boot.supportedFilesystems = [ "zfs" ];
+  boot.zfs = {
+    forceImportRoot = false;
+    extraPools = [ "tank" ];
+  };
+  services.zfs.autoScrub.enable = true;
 
   # Enable networking
   networking.networkmanager.enable = true;
+  networking.hostName = "hal9000";
+  networking.hostId = "16cff501";
   networking.networkmanager.extraConfig = ''
     [connection]
     wifi.wake-on-wlan = magic
