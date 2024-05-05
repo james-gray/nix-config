@@ -20,9 +20,60 @@
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
     forceImportRoot = false;
-    extraPools = [ "tank" ];
+    extraPools = [ "tank9000" "backup9000" ];
   };
   services.zfs.autoScrub.enable = true;
+
+  # Sanoid ZFS dataset backup
+  services.sanoid = {
+    enable = true;
+    datasets.tank9000 = {
+      autoprune = true;
+      autosnap = true;
+      recursive = true;
+      hourly = 24;
+      daily = 30;
+      monthly = 3;
+    };
+  };
+
+  services.syncoid = {
+    enable = true;
+    user = "syncoid";
+    localSourceAllow = [
+      "compression"
+      "create"
+      "mount"
+      "mountpoint"
+      "receive"
+      "rollback"
+      "bookmark"
+      "hold"
+      "send"
+      "snapshot"
+      "destroy"
+    ];
+    localTargetAllow = [
+      "compression"
+      "create"
+      "mount"
+      "mountpoint"
+      "receive"
+      "rollback"
+      "bookmark"
+      "hold"
+      "send"
+      "snapshot"
+      "destroy"
+    ];
+    commonArgs = [
+      "--no-privilege-elevation" "--recursive"
+    ];
+    commands."tank9000" = {
+      source = "tank9000/ds1";
+      target = "backup9000/ds1";
+    };
+  };
 
   # Enable networking
   networking.networkmanager.enable = true;
@@ -35,8 +86,8 @@
   '';
 
   # NFS configuration
-  # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank/example):
-  # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank/example
+  # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank9000/example):
+  # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank9000/example
   # This enables hosts on the tailnet to mount the share r/w, and files created will be owned by jamesgray:users.
   #
   # TODO: See about reassigning client ips to tighten up the tailnet subnet mask
@@ -96,13 +147,20 @@
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
-  # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.jamesgray = with pkgs; {
     isNormalUser = true;
     description = "James Gray";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = zsh;
   };
+  users.groups.syncoid = {};
+  users.users.syncoid = with pkgs; {
+    group = "syncoid";
+    description = "Syncoid User";
+    extraGroups = [ "wheel" ];
+    shell = bash;
+  };
+
   users.motd = "I'm sorry, Dave, I'm afraid I can't do that.";
   programs.zsh.enable = true;
   programs.zsh.interactiveShellInit = ''
@@ -333,6 +391,7 @@
     htop
     ethtool
     smartmontools
+    sanoid
   ];
   environment.variables.EDITOR = "vim";
 
