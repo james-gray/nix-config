@@ -56,6 +56,26 @@
 
   # Service configuration
   services = {
+    avahi = {
+      extraServiceFiles = {
+        smb = ''
+          <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
+          <!DOCTYPE service-group SYSTEM "avahi-service.dtd">
+          <service-group>
+           <name replace-wildcards="yes">%h</name>
+           <service>
+            <type>_adisk._tcp</type>
+            <txt-record>sys=waMa=0,adVF=0x100</txt-record>
+            <txt-record>dk0=adVN=Time Capsule,adVF=0x82</txt-record>
+           </service>
+           <service>
+            <type>_smb._tcp</type>
+            <port>445</port>
+           </service>
+          </service-group>
+        '';
+      };
+    };
     hardware = { openrgb.enable = true; };
 
     # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank9000/example):
@@ -67,6 +87,83 @@
     openssh = {
       enable = true;
       settings = { UseDns = false; };
+    };
+
+    samba = {
+      enable = true;
+      securityType = "user";
+      extraConfig = ''
+        workgroup = WORKGROUP
+        server string = smbnix
+        netbios name = smbnix
+        server role = standalone server
+        dns proxy = no
+        ea support = yes
+
+        pam password change = yes
+        map to guest = bad user
+        usershare allow guests = yes
+        create mask = 0664
+        force create mode = 0664
+        directory mask = 0775
+        force directory mode = 0775
+        follow symlinks = yes
+        load printers = no
+        printing = bsd
+        printcap name = /dev/null
+        disable spoolss = yes
+        strict locking = no
+        aio read size = 0
+        aio write size = 0
+        vfs objects = acl_xattr catia fruit streams_xattr
+        inherit permissions = yes
+
+        # Security
+        client ipc max protocol = SMB3
+        client ipc min protocol = SMB2
+        client max protocol = SMB3
+        client min protocol = SMB2
+        server max protocol = SMB3
+        server min protocol = SMB2
+
+        # Time Machine
+        fruit:aapl = yes
+        fruit:delete_empty_adfiles = yes
+        fruit:metadata = stream
+        fruit:model = MacSamba
+        fruit:nfs_aces = no
+        fruit:posix_rename = yes
+        fruit:time machine = yes
+        fruit:veto_appledouble = no
+        fruit:wipe_intentionally_left_blank_rfork = yes
+        spotlight = no
+      '';
+      shares = {
+        "Time Capsule" = {
+          path = "/tank9000/timemachine";
+          browseable = "yes";
+          "read only" = "no";
+          "inherit acls" = "yes";
+
+          "fruit:time machine" = "yes";
+          "fruit:time machine max size" = "512G";
+          "write list" = "timemachine";
+          "create mask" = "0600";
+          "directory mask" = "0700";
+          "case sensitive" = "true";
+          "default case" = "lower";
+          "preserve case" = "yes";
+          "short preserve case" = "yes";
+
+          # Uncomment to enable authentication
+          "force user" = "timemachine";
+          "valid users" = "timemachine";
+
+          #"guest ok" = "yes";
+          #"force user" = "nobody";
+          #"force group" = "nogroup";
+        };
+      };
     };
 
     # Sanoid ZFS dataset snapshotting
@@ -148,9 +245,11 @@
     hostId = "16cff501";
     firewall = {
       enable = true;
+      allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 2049 ];
-      allowedUDPPorts = [ 22 2049 config.services.tailscale.port ];
+      allowedTCPPorts = [ 22 2049 137 138 139 445 ];
+      allowedUDPPorts =
+        [ 22 2049 137 138 139 445 config.services.tailscale.port ];
     };
     interfaces = {
       wlo1 = { wakeOnLan = { enable = true; }; };
@@ -203,8 +302,17 @@
         group = "syncoid";
         shell = bash;
       };
+      timemachine = with pkgs; {
+        description = "Time Machine user";
+        group = "timemachine";
+        isNormalUser = true;
+        shell = bash;
+      };
     };
-    groups = { syncoid = { }; };
+    groups = {
+      syncoid = { };
+      timemachine = { };
+    };
   };
 
   # Setup home-manager user config
