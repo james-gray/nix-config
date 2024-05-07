@@ -1,12 +1,12 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-      ./hardware-configuration.nix
-      # Include Home Manager configuration
-      <home-manager/nixos>
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+    ./hardware-configuration.nix
+    # Include Home Manager configuration
+    <home-manager/nixos>
+  ];
 
   # Boot configuration
   boot = {
@@ -30,6 +30,7 @@
       lm_sensors
       neofetch
       neovim
+      nixfmt
       sanoid
       smartmontools
       vim
@@ -42,9 +43,7 @@
   };
 
   programs = {
-    ssh = {
-      startAgent = true;
-    };
+    ssh = { startAgent = true; };
     zsh = {
       enable = true;
       interactiveShellInit = ''
@@ -57,23 +56,17 @@
 
   # Service configuration
   services = {
-    hardware = {
-      openrgb.enable = true;
-    };
+    hardware = { openrgb.enable = true; };
 
     # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank9000/example):
     # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank9000/example
     # This enables hosts on the tailnet to mount the share r/w, and files created will be owned by jamesgray:users.
     # TODO: See about reassigning client ips to tighten up the tailnet subnet mask
-    nfs.server = {
-      enable = true;
-    };
+    nfs.server = { enable = true; };
 
     openssh = {
       enable = true;
-      settings = {
-        UseDns = false;
-      };
+      settings = { UseDns = false; };
     };
 
     # Sanoid ZFS dataset snapshotting
@@ -119,9 +112,7 @@
         "snapshot"
         "destroy"
       ];
-      commonArgs = [
-        "--no-privilege-elevation" "--recursive"
-      ];
+      commonArgs = [ "--no-privilege-elevation" "--recursive" ];
       commands."tank9000" = {
         source = "tank9000/ds1";
         target = "backup9000/ds1";
@@ -134,9 +125,7 @@
       useRoutingFeatures = "server";
     };
 
-    zfs = {
-      autoScrub.enable = true;
-    };
+    zfs = { autoScrub.enable = true; };
   };
 
   i18n = {
@@ -164,16 +153,8 @@
       allowedUDPPorts = [ 22 2049 config.services.tailscale.port ];
     };
     interfaces = {
-      wlo1 = {
-        wakeOnLan = {
-          enable = true;
-        };
-      };
-      eno2 = {
-        wakeOnLan = {
-          enable = true;
-        };
-      };
+      wlo1 = { wakeOnLan = { enable = true; }; };
+      eno2 = { wakeOnLan = { enable = true; }; };
     };
     networkmanager = {
       enable = true;
@@ -191,11 +172,7 @@
     '';
   };
 
-  nixpkgs = {
-    config = {
-      allowUnfree = true;
-    };
-  };
+  nixpkgs = { config = { allowUnfree = true; }; };
 
   # Disable sleep! Servers can sleep when they're dead!
   systemd = {
@@ -209,9 +186,7 @@
     };
   };
 
-  time = {
-    timeZone = "America/Vancouver";
-  };
+  time = { timeZone = "America/Vancouver"; };
 
   users = {
     motd = "I'm sorry, Dave, I'm afraid I can't do that.";
@@ -229,18 +204,14 @@
         shell = bash;
       };
     };
-    groups = {
-      syncoid = {};
-    };
+    groups = { syncoid = { }; };
   };
 
   # Setup home-manager user config
   home-manager.users.jamesgray = { pkgs, ... }: {
     home = {
       stateVersion = "23.11";
-      packages = with pkgs; [
-        powertop
-      ];
+      packages = with pkgs; [ powertop ];
     };
     programs = {
       vim = {
@@ -437,9 +408,7 @@
 
         oh-my-zsh = {
           enable = true;
-          plugins = [
-            "git"
-          ];
+          plugins = [ "git" ];
         };
       };
     };
