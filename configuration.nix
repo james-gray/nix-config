@@ -214,6 +214,10 @@
         source = "tank9000/ds1";
         target = "backup9000/ds1";
       };
+      commands."timemachine" = {
+        source = "tank9000/timemachine";
+        target = "backup9000/timemachine";
+      };
     };
 
     # Tailscale mesh network
@@ -296,6 +300,13 @@
         isNormalUser = true;
         shell = zsh;
       };
+      "james.gray" = with pkgs; {
+        description = "James Gray (macos)";
+        extraGroups = [ "macos" ];
+        isNormalUser = true;
+        group = "james.gray";
+        shell = bash;
+      };
       syncoid = with pkgs; {
         description = "Syncoid User";
         extraGroups = [ "wheel" ];
@@ -312,6 +323,8 @@
     groups = {
       syncoid = { };
       timemachine = { };
+      "james.gray" = { };
+      macos = { gid = 1005; };
     };
   };
 
