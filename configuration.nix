@@ -17,7 +17,7 @@
     supportedFilesystems = [ "zfs" ];
     zfs = {
       forceImportRoot = false;
-      extraPools = [ "tank9000" ];
+      extraPools = [ "tank9000" "backup9000" ];
     };
   };
 
