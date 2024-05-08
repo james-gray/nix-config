@@ -25,10 +25,10 @@
     systemPackages = with pkgs; [
       beep
       ethtool
+      fastfetch
       git
       htop
       lm_sensors
-      neofetch
       neovim
       nixfmt
       sanoid
@@ -47,7 +47,7 @@
     zsh = {
       enable = true;
       interactiveShellInit = ''
-        neofetch
+        fastfetch
         export GIT_EDITOR="`which vim`"
         export EDITOR="`which vim`"
       '';
