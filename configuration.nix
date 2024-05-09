@@ -6,6 +6,8 @@
     ./hardware-configuration.nix
     # Include Home Manager configuration
     <home-manager/nixos>
+    # Secrets management
+    <agenix/modules/age.nix>
   ];
 
   # Boot configuration
@@ -23,6 +25,7 @@
 
   environment = {
     systemPackages = with pkgs; [
+      (pkgs.callPackage <agenix/pkgs/agenix.nix> {}) # Agenix CLI
       beep
       ethtool
       fastfetch
