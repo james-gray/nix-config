@@ -27,6 +27,8 @@
     systemPackages = with pkgs; [
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
+      docker
+      docker-compose
       ethtool
       fastfetch
       git
@@ -295,7 +297,7 @@
     users = {
       jamesgray = with pkgs; {
         description = "James Gray";
-        extraGroups = [ "networkmanager" "wheel" ];
+        extraGroups = [ "docker" "networkmanager" "wheel" ];
         isNormalUser = true;
         shell = zsh;
       };
@@ -324,6 +326,26 @@
       timemachine = { };
       "james.gray" = { };
       macos = { gid = 1005; };
+    };
+  };
+
+  virtualisation = {
+    docker = {
+      enable = true;
+      storageDriver = "btrfs";
+      daemon = {
+        settings = {
+          data-root = "";
+        };
+      };
+      rootless = {
+        enable = true;
+        setSocketVariable = true;
+      };
+    };
+    oci-containers = {
+      backend = "docker";
+      containers = { };
     };
   };
 
