@@ -275,8 +275,13 @@
 
   nixpkgs = { config = { allowUnfree = true; }; };
 
-  # Disable sleep! Servers can sleep when they're dead!
   systemd = {
+    services = {
+      "NetworkManager-wait-online" = {
+        enable = false;
+      };
+    };
+    # Disable sleep! Servers can sleep when they're dead!
     sleep = {
       extraConfig = ''
         AllowSuspend=no
@@ -529,14 +534,6 @@
           enable = true;
           plugins = [ "git" ];
         };
-      };
-    };
-  };
-
-  systemd = {
-    services = {
-      "NetworkManager-wait-online" = {
-        enable = false;
       };
     };
   };
