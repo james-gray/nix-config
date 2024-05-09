@@ -212,10 +212,10 @@
         source = "tank9000/ds1";
         target = "backup9000/ds1";
       };
-      #commands."timemachine" = {
-      #  source = "tank9000/timemachine";
-      #  target = "backup9000/timemachine";
-      #};
+      commands."timemachine" = {
+        source = "tank9000/timemachine";
+        target = "backup9000/timemachine";
+      };
     };
 
     # Tailscale mesh network
