@@ -158,13 +158,8 @@
           "preserve case" = "yes";
           "short preserve case" = "yes";
 
-          # Uncomment to enable authentication
           "force user" = "timemachine";
           "valid users" = "timemachine";
-
-          #"guest ok" = "yes";
-          #"force user" = "nobody";
-          #"force group" = "nogroup";
         };
       };
     };
