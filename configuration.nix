@@ -278,7 +278,25 @@
   nixpkgs = { config = { allowUnfree = true; }; };
 
   systemd = {
-    services = { "NetworkManager-wait-online" = { enable = false; }; };
+    services = {
+      "NetworkManager-wait-online" = { enable = false; };
+      nextcloud = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${./nextcloud-docker-compose.yml} up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${./nextcloud-docker-compose.yml} stop
+          '';
+          RemainAfterExit = true;
+          Type = "oneshot";
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+    };
     # Disable sleep! Servers can sleep when they're dead!
     sleep = {
       extraConfig = ''
@@ -333,11 +351,7 @@
     docker = {
       enable = true;
       storageDriver = "btrfs";
-      daemon = {
-        settings = {
-          data-root = "";
-        };
-      };
+      daemon = { settings = { data-root = ""; }; };
       rootless = {
         enable = true;
         setSocketVariable = true;
