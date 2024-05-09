@@ -351,7 +351,6 @@
     docker = {
       enable = true;
       storageDriver = "btrfs";
-      daemon = { settings = { data-root = ""; }; };
       rootless = {
         enable = true;
         setSocketVariable = true;
