@@ -30,6 +30,7 @@
       docker
       docker-compose
       ethtool
+      exiftool
       fastfetch
       git
       htop
