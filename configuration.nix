@@ -338,12 +338,19 @@
         isNormalUser = true;
         shell = bash;
       };
+      www-data = with pkgs; {
+        description = "www-data";
+        group = "www-data";
+        isSystemUser = true;
+        uid = 33;
+      };
     };
     groups = {
       syncoid = { };
       timemachine = { };
       "james.gray" = { };
       macos = { gid = 1005; };
+      www-data = { gid = 33; };
     };
   };
 
