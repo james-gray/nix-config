@@ -1,0 +1,19 @@
+---
+version: "3.5"
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    user: 1000:100
+    network_mode: "host"
+    volumes:
+      - /tank9000/ds1/jellyfin/config:/config
+      - /tank9000/ds1/jellyfin/cache:/cache
+      - type: bind
+        source: /tank9000/ds1/jellyfin/media
+        target: /media
+    restart: "unless-stopped"
+    environment:
+      - JELLYFIN_PublishedServerUrl=https://jellyfin.jgray.me
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
