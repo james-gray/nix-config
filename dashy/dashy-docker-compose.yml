@@ -5,7 +5,7 @@ services:
     ports:
       - 28080:8080
     volumes:
-      - /home/jamesgray/code/nix-config/dashy-config.yml:/app/user-data/conf.yml
+      - /home/jamesgray/code/nix-config/dashy/dashy-config.yml:/app/user-data/conf.yml
     container_name: dashy
     tty: true
     stdin_open: true
