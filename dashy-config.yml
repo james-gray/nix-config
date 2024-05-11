@@ -11,18 +11,26 @@ pageInfo:
 # Optional app settings and configuration
 appConfig:
   theme: default
+  statusCheck: true
 
 # Main content - An array of sections, each containing an array of items
 sections:
 - name: Apps
-  icon: fas fa-grid-horizontal
+  icon: fas grid-horizontal
   items:
   - title: Nextcloud
-    description: Our own personal Google Drive
+    description: Our own personal Google Drive.
     icon: si-nextcloud
     url: https://nextcloud.jgray.me/
     target: newtab
   - title: Home Assistant
-    description: Control panel for the Gray Family home
+    description: Control panel for the Gray Family home.
     url: https://hass.jgray.me/
     icon: si-homeassistant
+- name: Monitoring
+  icon: fas fa-chart-line
+  items:
+    - title: Netdata
+      description: System monitoring and information. Must be on Tailnet to access.
+      icon: si-netdata
+      url: http://hal9000:19999
