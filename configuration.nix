@@ -36,6 +36,7 @@
       htop
       lm_sensors
       neovim
+      netdata
       nixfmt
       sanoid
       smartmontools
@@ -83,6 +84,20 @@
       };
     };
     hardware = { openrgb.enable = true; };
+
+    netdata = {
+      enable = true;
+
+      config = {
+        global = {
+          # update interval
+          "update every" = 15;
+        };
+        ml = {
+          "enabled" = "no";
+        };
+      };
+    };
 
     # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank9000/example):
     # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank9000/example
