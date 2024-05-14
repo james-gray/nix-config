@@ -5,7 +5,8 @@ services:
     image: jellyfin/jellyfin:latest
     container_name: jellyfin
     user: 1000:100
-    network_mode: "host"
+    ports:
+      - 8096:8096
     volumes:
       - /tank9000/ds1/jellyfin/config:/config
       - /tank9000/ds1/jellyfin/cache:/cache
