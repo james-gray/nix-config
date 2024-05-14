@@ -50,6 +50,8 @@
     };
   };
 
+  age = { secrets = { "vw-env" = { file = ./secrets/vw-env.age; }; }; };
+
   programs = {
     ssh = { startAgent = true; };
     zsh = {
@@ -94,9 +96,7 @@
           # update interval
           "update every" = 15;
         };
-        ml = {
-          "enabled" = "no";
-        };
+        ml = { "enabled" = "no"; };
       };
     };
 
@@ -301,10 +301,14 @@
         enable = true;
         serviceConfig = {
           ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./dashy/docker-compose.yml} up
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./dashy/docker-compose.yml
+            } up
           '';
           ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./dashy/docker-compose.yml} stop
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./dashy/docker-compose.yml
+            } stop
           '';
         };
         after = [ "docker.service" ];
@@ -315,10 +319,14 @@
         enable = true;
         serviceConfig = {
           ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./jellyfin/docker-compose.yml} up
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./jellyfin/docker-compose.yml
+            } up
           '';
           ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./jellyfin/docker-compose.yml} stop
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./jellyfin/docker-compose.yml
+            } stop
           '';
         };
         after = [ "docker.service" ];
@@ -329,13 +337,36 @@
         enable = true;
         serviceConfig = {
           ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./nextcloud/docker-compose.yml} up -d
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./nextcloud/docker-compose.yml
+            } up -d
           '';
           ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${./nextcloud/docker-compose.yml} stop
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./nextcloud/docker-compose.yml
+            } stop
           '';
           RemainAfterExit = true;
           Type = "oneshot";
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      vaultwarden = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./vaultwarden/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./vaultwarden/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
         };
         after = [ "docker.service" ];
         requires = [ "docker.service" ];

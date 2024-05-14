@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: unless-stopped
+    volumes:
+      - /tank9000/ds1/vaultwarden/data/:/data/
+    ports:
+      - 180:80
+    env_file:
+      - /run/agenix/vw-env
