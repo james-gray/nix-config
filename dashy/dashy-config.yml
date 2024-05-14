@@ -28,6 +28,11 @@ sections:
     url: https://hass.jgray.me/
     icon: hl-home-assistant
     statusCheck: true
+  - title: Jellyfin
+    description: Home media server.
+    url: https://jellyfin.jgray.me/
+    icon: hl-jellyfin
+    statusCheck: true
 - name: Monitoring
   icon: fas fa-chart-line
   items:
