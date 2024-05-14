@@ -42,6 +42,7 @@
       smartmontools
       vim
       wget
+      unzip
     ];
     variables = {
       EDITOR = "vim";
