@@ -41,6 +41,7 @@
       nixfmt
       sanoid
       smartmontools
+      sqlite
       vim
       wget
       unzip
@@ -435,6 +436,20 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      vaultwarden-backup = {
+        enable = true;
+        serviceConfig = {
+          Type = "oneshot";
+          User = "root";
+          Group = "root";
+        };
+        path = with pkgs; [ pkgs.sqlite ];
+        script = ''
+          DATE=$(date '+%Y%m%d-%H%M')
+          sqlite3 /tank9000/ds1/vaultwarden/data/db.sqlite3 ".backup '/tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3'"
+          chown -R www-data:www-data /tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3
+        '';
+      };
     };
     # Disable sleep! Servers can sleep when they're dead!
     sleep = {
@@ -452,6 +467,14 @@
         timerConfig = {
           OnCalendar = "*:0/15";
           Unit = "scrutiny-collector-metrics.service";
+        };
+      };
+      vaultwarden-backup = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "vaultwarden-backup.service" ];
+        timerConfig = {
+          OnCalendar = "daily";
+          Unit = "vaultwarden-backup.service";
         };
       };
     };
