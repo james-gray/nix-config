@@ -51,7 +51,12 @@
     };
   };
 
-  age = { secrets = { "vw-env" = { file = ./secrets/vw-env.age; }; }; };
+  age = {
+    secrets = {
+      "mealie-env" = { file = ./secrets/mealie-env.age; };
+      "vw-env" = { file = ./secrets/vw-env.age; };
+    };
+  };
 
   programs = {
     ssh = { startAgent = true; };
@@ -90,11 +95,7 @@
     cockpit = {
       enable = true;
       port = 9090;
-      settings = {
-        WebService = {
-          AllowUnencrypted = true;
-        };
-      };
+      settings = { WebService = { AllowUnencrypted = true; }; };
     };
     hardware = { openrgb.enable = true; };
 

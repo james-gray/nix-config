@@ -12,13 +12,5 @@ services:
           memory: 1000M
     volumes:
       - /tank9000/ds1/mealie/data:/app/data/
-    environment:
-      # Set Backend ENV Variables Here
-      ALLOW_SIGNUP: true
-      PUID: 1000
-      PGID: 1000
-      TZ: America/Vancouver
-      MAX_WORKERS: 1
-      WEB_CONCURRENCY: 1
-      BASE_URL: https://mealie.jgray.me
-
+    env_file:
+      - /run/agenix/mealie-env

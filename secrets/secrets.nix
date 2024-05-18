@@ -10,4 +10,5 @@ let
 in
 {
   "vw-env.age".publicKeys = users ++ systems;
+  "mealie-env.age".publicKeys = users ++ systems;
 }
