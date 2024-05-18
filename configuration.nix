@@ -386,6 +386,17 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      scrutiny-collector-metrics = {
+        serviceConfig = {
+          User = "root";
+          Group = "root";
+          Type = "oneshot";
+        };
+        path = with pkgs; [ pkgs.docker ];
+        script = ''
+          docker exec scrutiny /opt/scrutiny/bin/scrutiny-collector-metrics run
+        '';
+      };
       scrutiny = {
         enable = true;
         serviceConfig = {
@@ -433,6 +444,16 @@
         AllowHybridSleep=no
         AllowSuspendThenHibernate=no
       '';
+    };
+    timers = {
+      scrutiny-collector-metrics = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "scrutiny-collector-metrics.service" ];
+        timerConfig = {
+          OnCalendar = "*:0/15";
+          Unit = "scrutiny-collector-metrics.service";
+        };
+      };
     };
   };
 
