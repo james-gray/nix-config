@@ -108,7 +108,10 @@
 
     openssh = {
       enable = true;
-      settings = { UseDns = false; };
+      settings = {
+        PasswordAuthentication = false;
+        UseDns = false;
+      };
     };
 
     samba = {
