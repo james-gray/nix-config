@@ -38,6 +38,11 @@ sections:
     url: https://vw.jgray.me/
     icon: hl-vaultwarden
     statusCheck: true
+  - title: Mealie
+    description: Recipe management app.
+    url: https://mealie.jgray.me/
+    icon: hl-mealie
+    statusCheck: true
 - name: Monitoring
   icon: fas fa-chart-line
   items:
