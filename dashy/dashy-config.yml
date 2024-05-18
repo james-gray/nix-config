@@ -47,3 +47,9 @@ sections:
       url: http://hal9000:19999
       target: newtab
       statusCheck: false
+    - title: Scrutiny
+      description: Smart monitoring of system drives. Must be on Tailnet to access.
+      icon: hl-scrutiny
+      url: http://hal9000:38080
+      target: newtab
+      statusCheck: false

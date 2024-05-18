@@ -356,6 +356,25 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      scrutiny = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./scrutiny/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./scrutiny/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       vaultwarden = {
         enable = true;
         serviceConfig = {
