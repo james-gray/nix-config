@@ -27,6 +27,7 @@
     systemPackages = with pkgs; [
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
+      cockpit
       docker
       docker-compose
       ethtool
@@ -84,6 +85,15 @@
            </service>
           </service-group>
         '';
+      };
+    };
+    cockpit = {
+      enable = true;
+      port = 9090;
+      settings = {
+        WebService = {
+          AllowUnencrypted = true;
+        };
       };
     };
     hardware = { openrgb.enable = true; };

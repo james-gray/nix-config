@@ -53,3 +53,9 @@ sections:
       url: http://hal9000:38080
       target: newtab
       statusCheck: false
+    - title: Cockpit
+      description: Server administration tool. Must be on Tailnet to access.
+      icon: hl-cockpit
+      url: http://hal9000:9090
+      target: newtab
+      statusCheck: false
