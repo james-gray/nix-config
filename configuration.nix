@@ -312,6 +312,24 @@
   systemd = {
     services = {
       "NetworkManager-wait-online" = { enable = false; };
+      actual = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./actual/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./actual/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       dashy = {
         enable = true;
         serviceConfig = {

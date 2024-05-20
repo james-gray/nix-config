@@ -43,6 +43,11 @@ sections:
     url: https://mealie.jgray.me/
     icon: hl-mealie
     statusCheck: true
+  - title: Actual
+    description: Budgeting software / YNAB clone.
+    url: https://actual.jgray.me/
+    icon: hl-actual
+    statusCheck: true
 - name: Monitoring
   icon: fas fa-chart-line
   items:
