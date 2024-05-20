@@ -39,13 +39,14 @@
       neovim
       netdata
       nixfmt
+      rclone
       rsync
       sanoid
       smartmontools
       sqlite
+      unzip
       vim
       wget
-      unzip
     ];
     variables = {
       EDITOR = "vim";
@@ -57,6 +58,7 @@
     secrets = {
       "mealie-env" = { file = ./secrets/mealie-env.age; };
       "vw-env" = { file = ./secrets/vw-env.age; };
+      "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
     };
   };
 
@@ -406,6 +408,17 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      nextcloud-backup = {
+        serviceConfig = {
+          User = "root";
+          Group = "root";
+          Type = "oneshot";
+        };
+        path = with pkgs; [ pkgs.rclone pkgs.docker ];
+        script = ''
+          /home/jamesgray/code/nix-config/nextcloud/backup-b2.sh
+        '';
+      };
       nextcloud-jellyfin-sync = {
         serviceConfig = {
           User = "root";
@@ -491,6 +504,14 @@
       '';
     };
     timers = {
+      nextcloud-backup = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "nextcloud-backup.service" ];
+        timerConfig = {
+          OnCalendar = "*-*-* 02:00:00";
+          Unit = "nextcloud-backup.service";
+        };
+      };
       nextcloud-jellyfin-sync = {
         wantedBy = [ "timers.target" ];
         partOf = [ "nextcloud-jellyfin-sync.service" ];
