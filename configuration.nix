@@ -39,6 +39,7 @@
       neovim
       netdata
       nixfmt
+      rsync
       sanoid
       smartmontools
       sqlite
@@ -405,6 +406,17 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      nextcloud-jellyfin-sync = {
+        serviceConfig = {
+          User = "root";
+          Group = "root";
+          Type = "oneshot";
+        };
+        path = with pkgs; [ pkgs.rsync ];
+        script = ''
+          rsync -r --chown=jamesgray:users "/tank9000/ds1/nextcloud/admin/files/Family Home Videos/" "/tank9000/ds1/jellyfin/media/Family Home Videos"
+        '';
+      };
       scrutiny-collector-metrics = {
         serviceConfig = {
           User = "root";
@@ -479,6 +491,14 @@
       '';
     };
     timers = {
+      nextcloud-jellyfin-sync = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "nextcloud-jellyfin-sync.service" ];
+        timerConfig = {
+          OnCalendar = "*:0/15";
+          Unit = "nextcloud-jellyfin-sync.service";
+        };
+      };
       scrutiny-collector-metrics = {
         wantedBy = [ "timers.target" ];
         partOf = [ "scrutiny-collector-metrics.service" ];
