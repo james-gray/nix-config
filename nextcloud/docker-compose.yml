@@ -12,6 +12,8 @@ services:
     environment:
       - APACHE_PORT=11000
       - NEXTCLOUD_DATADIR=/tank9000/ds1/nextcloud
+      - PHP_MEMORY_LIMIT=1024M
+      - PHP_UPLOAD_LIMIT=1024M
     image: nextcloud/all-in-one:latest
 volumes:
   # NOTE: Need to create the docker volume first: $ docker volume create nextcloud_aio_mastercontainer
