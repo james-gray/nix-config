@@ -12,4 +12,5 @@ in
   "vw-env.age".publicKeys = users ++ systems;
   "mealie-env.age".publicKeys = users ++ systems;
   "backup-b2-env.age".publicKeys = users ++ systems;
+  "immich-env.age".publicKeys = users ++ systems;
 }
