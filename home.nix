@@ -150,7 +150,7 @@
             syntaxHighlighting.enable = true;
 
             shellAliases = {
-              conf = "vim ~/code/nix-config/configuration.nix";
+              conf = "vim /etc/nixos/configuration.nix";
               ga = "git add";
               gap = "git add -p";
               gb = "git blame";

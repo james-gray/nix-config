@@ -3,7 +3,7 @@
 {
   imports = [
     # Include the results of the hardware scan.
-    ./hardware-configuration.nix
+    ./server-hardware-configuration.nix
     # Include Home Manager configuration
     <home-manager/nixos>
     # Secrets management
