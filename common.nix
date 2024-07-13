@@ -18,6 +18,7 @@
       neovim
       nixfmt
       rsync
+      tmux
       unzip
       vim
       wget
