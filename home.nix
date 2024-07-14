@@ -235,6 +235,7 @@
               gsta = "git stash apply";
               ls = "ls -lah";
               ncf = "cd ~/code/nix-config";
+              open = "dolphin";
               rebuild = "sudo nixos-rebuild switch";
             };
 

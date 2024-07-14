@@ -28,6 +28,7 @@
   security = { rtkit = { enable = true; }; };
 
   services = {
+    desktopManager = { plasma6 = { enable = true; }; };
     pipewire = {
       enable = true;
       alsa = {
@@ -39,7 +40,6 @@
     printing = { enable = true; };
     xserver = {
       enable = true;
-      desktopManager = { cinnamon = { enable = true; }; };
       displayManager = { lightdm = { enable = true; }; };
       xkb = {
         layout = "us";
