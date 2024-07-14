@@ -8,43 +8,24 @@
     ./common.nix
   ];
 
-  environment = {
-    systemPackages = with pkgs; [
-      firefox
-      meslo-lgs-nf
-    ];
-  };
+  environment = { systemPackages = with pkgs; [ firefox meslo-lgs-nf ]; };
 
   boot = {
     loader = {
-      systemd-boot = {
-        configurationLimit = 1;
-      };
-      efi = {
-        efiSysMountPoint = "/boot";
-      };
+      systemd-boot = { configurationLimit = 1; };
+      efi = { efiSysMountPoint = "/boot"; };
     };
   };
 
-  hardware = {
-    pulseaudio = {
-      enable = false;
-    };
-  };
+  hardware = { pulseaudio = { enable = false; }; };
 
   networking = {
     hostName = "jgrtp";
     hostId = "876f1ee1";
-    networkmanager = {
-      enable = true;
-    };
+    networkmanager = { enable = true; };
   };
 
-  security = {
-    rtkit = {
-      enable = true;
-    };
-  };
+  security = { rtkit = { enable = true; }; };
 
   services = {
     pipewire = {
@@ -53,13 +34,9 @@
         enable = true;
         support32Bit = true;
       };
-      pulse = {
-        enable = true;
-      };
+      pulse = { enable = true; };
     };
-    printing = {
-      enable = true;
-    };
+    printing = { enable = true; };
     xserver = {
       enable = true;
       desktopManager = { cinnamon = { enable = true; }; };
@@ -71,9 +48,7 @@
     };
   };
 
-  sound = {
-    enable = true;
-  };
+  sound = { enable = true; };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
