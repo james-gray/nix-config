@@ -6,7 +6,7 @@
     users = {
       jamesgray = { pkgs, ... }: {
         home = {
-          stateVersion = "23.11";
+          stateVersion = "24.05";
           packages = with pkgs; [ powertop ];
         };
         programs = {
@@ -198,9 +198,9 @@
             '';
           };
           zsh = {
+            autosuggestion = { enable = true; };
             enable = true;
             enableCompletion = true;
-            enableAutosuggestions = true;
             syntaxHighlighting.enable = true;
 
             shellAliases = {

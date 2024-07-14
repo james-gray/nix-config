@@ -62,18 +62,12 @@
     };
     xserver = {
       enable = true;
-      desktopManager = {
-        cinnamon = {
-          enable = true;
-        };
+      desktopManager = { cinnamon = { enable = true; }; };
+      displayManager = { lightdm = { enable = true; }; };
+      xkb = {
+        layout = "us";
+        variant = "";
       };
-      displayManager = {
-        lightdm = {
-          enable = true;
-        };
-      };
-      layout = "us";
-      xkbVariant = "";
     };
   };
 

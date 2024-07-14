@@ -16,7 +16,7 @@
       git
       htop
       neovim
-      nixfmt
+      nixfmt-classic
       rsync
       tmux
       unzip
