@@ -17,6 +17,7 @@
       htop
       neovim
       nixfmt-classic
+      python310Full
       rsync
       tmux
       unzip
