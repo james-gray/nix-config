@@ -8,7 +8,7 @@
     ./common.nix
   ];
 
-  environment = { systemPackages = with pkgs; [ firefox meslo-lgs-nf ]; };
+  environment = { systemPackages = with pkgs; [ firefox meslo-lgs-nf fprintd ]; };
 
   boot = {
     loader = {
@@ -35,6 +35,9 @@
 
   services = {
     desktopManager = { plasma6 = { enable = true; }; };
+    fprintd = {
+      enable = true;
+    };
     pipewire = {
       enable = true;
       alsa = {
