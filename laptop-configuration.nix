@@ -8,7 +8,19 @@
     ./common.nix
   ];
 
-  environment = { systemPackages = with pkgs; [ firefox meslo-lgs-nf fprintd ]; };
+  environment = { systemPackages = with pkgs; [
+    audacity
+    firefox
+    fprintd
+    gimp
+    jetbrains.idea-community
+    libreoffice
+    meslo-lgs-nf
+    reaper
+    steam
+    super-productivity
+    vlc
+  ]; };
 
   boot = {
     loader = {
