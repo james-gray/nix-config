@@ -43,6 +43,12 @@
     };
   };
 
+  programs = {
+    steam = {
+      enable = true;
+    };
+  };
+
   security = { rtkit = { enable = true; }; };
 
   services = {
