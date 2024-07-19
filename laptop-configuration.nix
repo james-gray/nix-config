@@ -10,7 +10,6 @@
   environment = { systemPackages = with pkgs; [
     audacity
     firefox
-    fprintd
     gimp
     jetbrains.idea-community
     libreoffice
@@ -60,9 +59,6 @@
 
   services = {
     desktopManager = { plasma6 = { enable = true; }; };
-    fprintd = {
-      enable = true;
-    };
     pipewire = {
       enable = true;
       alsa = {
