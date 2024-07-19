@@ -1,25 +1,22 @@
-{ config, pkgs, ... }:
+{ config, pkgs, nixos-06cb-009a-fingerprint-sensor, ... }:
 
 {
-  imports = [
-    ./laptop-hardware-configuration.nix
-    ./home.nix
-    ./common.nix
-  ];
+  imports = [ ./laptop-hardware-configuration.nix ./home.nix ./common.nix ];
 
-  environment = { systemPackages = with pkgs; [
-    audacity
-    firefox
-    fprintd
-    gimp
-    jetbrains.idea-community
-    libreoffice
-    meslo-lgs-nf
-    reaper
-    steam
-    super-productivity
-    vlc
-  ]; };
+  environment = {
+    systemPackages = with pkgs; [
+      audacity
+      firefox
+      gimp
+      jetbrains.idea-community
+      libreoffice
+      meslo-lgs-nf
+      reaper
+      steam
+      super-productivity
+      vlc
+    ];
+  };
 
   boot = {
     loader = {
@@ -36,33 +33,48 @@
     networkmanager = { enable = true; };
   };
 
-  nix = {
-    package = pkgs.nixFlakes;
-  };
+  nix = { package = pkgs.nixFlakes; };
 
   nixpkgs = {
     config = {
       packageOverrides = pkgs: {
-        nur = import (builtins.fetchTarball "https://github.com/nix-community/NUR/archive/master.tar.gz") {
-          inherit pkgs;
-        };
+        nur = import (builtins.fetchTarball
+          "https://github.com/nix-community/NUR/archive/master.tar.gz") {
+            inherit pkgs;
+          };
       };
     };
   };
 
-  programs = {
-    steam = {
+  programs = { steam = { enable = true; }; };
+
+  security = {
+    pam = {
+      services = {
+        sddm = {
+          text = ''
+            auth [success=1 new_authtok_reqd=1 default=ignore]  pam_unix.so try_first_pass likeauth nullok
+            auth sufficient ${nixos-06cb-009a-fingerprint-sensor.localPackages.fprintd-clients}/lib/security/pam_fprintd.so
+          '';
+        };
+      };
+    };
+    rtkit = {
       enable = true;
     };
   };
 
-  security = { rtkit = { enable = true; }; };
-
   services = {
     desktopManager = { plasma6 = { enable = true; }; };
-    fprintd = {
-      enable = true;
+    displayManager = {
+      sddm = {
+        enable = true;
+        wayland = {
+          enable = true;
+        };
+      };
     };
+    open-fprintd = { enable = true; };
     pipewire = {
       enable = true;
       alsa = {
@@ -72,9 +84,9 @@
       pulse = { enable = true; };
     };
     printing = { enable = true; };
+    python-validity = { enable = true; };
     xserver = {
       enable = true;
-      displayManager = { lightdm = { enable = true; }; };
       xkb = {
         layout = "us";
         variant = "";
