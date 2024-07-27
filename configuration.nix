@@ -41,6 +41,7 @@
 
   age = {
     secrets = {
+      "lubelogger-env" = { file = ./secrets/lubelogger-env.age; };
       "mealie-env" = { file = ./secrets/mealie-env.age; };
       "vw-env" = { file = ./secrets/vw-env.age; };
       "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
@@ -326,6 +327,24 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./jellyfin/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      lubelogger = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./lubelogger/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./lubelogger/docker-compose.yml
             } stop
           '';
         };

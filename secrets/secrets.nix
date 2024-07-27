@@ -9,6 +9,7 @@ let
   systems = [ root_ed25519 root_rsa ];
 in
 {
+  "lubelogger-env.age".publicKeys = users ++ systems;
   "vw-env.age".publicKeys = users ++ systems;
   "mealie-env.age".publicKeys = users ++ systems;
   "backup-b2-env.age".publicKeys = users ++ systems;

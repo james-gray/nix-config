@@ -1,0 +1,23 @@
+---
+version: "3.4"
+
+services:
+  app:
+    image: ghcr.io/hargata/lubelogger:latest
+    build: .
+    restart: unless-stopped
+    # volumes used to keep data persistent
+    volumes:
+      - /tank9000/ds1/lubelogger/config:/App/config
+      - /tank9000/ds1/lubelogger/data:/App/data
+      - /tank9000/ds1/lubelogger/translations:/App/wwwroot/translations
+      - /tank9000/ds1/lubelogger/documents:/App/wwwroot/documents
+      - /tank9000/ds1/lubelogger/images:/App/wwwroot/images
+      - /tank9000/ds1/lubelogger/temp:/App/wwwroot/temp
+      - /tank9000/ds1/lubelogger/log:/App/log
+      - /tank9000/ds1/lubelogger/keys:/root/.aspnet/DataProtection-Keys
+    # expose port and/or use serving via traefik
+    ports:
+      - 48080:8080
+    env_file:
+      - /run/agenix/lubelogger-env
