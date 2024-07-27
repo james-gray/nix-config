@@ -1,6 +1,6 @@
 services:
   mealie:
-    image: ghcr.io/mealie-recipes/mealie:v1.6.0
+    image: ghcr.io/mealie-recipes/mealie:latest
     user: 1000:100
     container_name: mealie
     restart: always
