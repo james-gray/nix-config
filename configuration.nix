@@ -35,6 +35,7 @@
       sanoid
       smartmontools
       sqlite
+      zfs-prune-snapshots
     ];
   };
 
