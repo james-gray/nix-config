@@ -415,6 +415,24 @@
           rsync -r -c --progress --chown=jamesgray:users "/tank9000/ds1/nextcloud/admin/files/Music/Bandcamp/" "/tank9000/ds1/jellyfin/media/Bandcamp"
         '';
       };
+      uptime-kuma = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./uptime-kuma/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./uptime-kuma/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       scrutiny-collector-metrics = {
         serviceConfig = {
           User = "root";
