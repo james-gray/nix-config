@@ -10,8 +10,13 @@ services:
       - /dev/dri/renderD128:/dev/dri/renderD128 # For intel hwaccel, needs to be updated for your hardware
     volumes:
       - /tank9000/ds1/frigate/config:/config
+      - /home/jamesgray/code/nix-config/frigate/config.yml:/config/config.yml
       - /tank9000/ds1/frigate/media/frigate:/media/frigate
       - /etc/localtime:/etc/localtime:ro
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1000000000
     ports:
       - "5000:5000"
       - "8554:8554" # RTSP feeds
