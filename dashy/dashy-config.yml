@@ -48,6 +48,11 @@ sections:
     url: https://actual.jgray.me/
     icon: hl-actual
     statusCheck: true
+  - title: LubeLogger
+    description: Car maintenance tracker.
+    url: https://lubelogger.jgray.me/
+    icon: hl-lubelogger
+    statusCheck: true
 - name: Monitoring
   icon: fas fa-chart-line
   items:
@@ -67,5 +72,17 @@ sections:
       description: Server administration tool. Must be on Tailnet to access.
       icon: hl-cockpit
       url: http://hal9000:9090
+      target: newtab
+      statusCheck: false
+    - title: Uptime Kuma
+      description: Uptime monitoring. Must be on Tailnet to access.
+      icon: hl-uptime-kuma
+      url: http://hal9000:3001
+      target: newtab
+      statusCheck: false
+    - title: AdGuard Home
+      description: DNS-based adblock. Must be on home network to access.
+      icon: hl-adguardhome
+      url: http://10.0.0.65:8083
       target: newtab
       statusCheck: false
