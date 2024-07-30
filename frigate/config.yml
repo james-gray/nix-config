@@ -1,0 +1,13 @@
+mqtt:
+  enabled: False
+
+cameras:
+  doorbell: # <--- this will be changed to your actual camera later
+    enabled: True
+    ffmpeg:
+      inputs:
+        - path: rtsp://frigate:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:554/h264Preview_01_main
+          roles:
+            - detect
+    detect:
+      enabled: False
