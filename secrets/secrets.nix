@@ -14,4 +14,5 @@ in
   "mealie-env.age".publicKeys = users ++ systems;
   "backup-b2-env.age".publicKeys = users ++ systems;
   "immich-env.age".publicKeys = users ++ systems;
+  "frigate-env.age".publicKeys = users ++ systems;
 }
