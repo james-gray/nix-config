@@ -37,6 +37,7 @@ cameras:
             - detect
             - audio
     detect:
+      enabled: False
       width: 640
       height: 480
       fps: 10
