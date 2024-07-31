@@ -1,13 +1,45 @@
 mqtt:
   enabled: False
 
+go2rtc:
+  streams:
+    doorbell:
+      - rtsp://frigate:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:554/h264Preview_01_main
+      - ffmpeg:rtsp://frigate:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:554/h264Preview_01_main#audio=pcm#audio=volume
+  ffmpeg:
+    bin: ffmpeg
+    volume: "-af \"volume=30dB\""
+
 cameras:
-  doorbell: # <--- this will be changed to your actual camera later
+  doorbell:
     enabled: True
     ffmpeg:
       inputs:
+        # High Res stream
         - path: rtsp://frigate:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:554/h264Preview_01_main
+          roles:
+            - record
+        # Low Res stream
+        - path: rtsp://frigate:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:554/h264Preview_01_sub
           roles:
             - detect
     detect:
-      enabled: False
+      width: 640
+      height: 480
+      fps: 10
+    objects:
+      track:
+        - person
+        - cat
+        - bird
+    rtmp:
+      enabled: false
+    snapshots:
+      enabled: true
+    record:
+      enabled: true
+      retain:
+        days: 5
+      events:
+        retain:
+          default: 10
