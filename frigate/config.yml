@@ -1,5 +1,9 @@
 mqtt:
-  enabled: False
+  enabled: True
+  host: 10.0.0.233
+  port: 1883
+  topic_prefix: zigbee2mqtt/frigate
+  client_id: frigate
 
 audio:
   enabled: True
