@@ -53,6 +53,11 @@ sections:
     url: https://lubelogger.jgray.me/
     icon: hl-lubelogger
     statusCheck: true
+  - title: Frigate
+    description: NVR/CCTV application. Must be on Tailnet to access.
+    url: http://hal9000:5000/
+    icon: hl-frigate
+    statusCheck: false
 - name: Monitoring
   icon: fas fa-chart-line
   items:
