@@ -29,6 +29,7 @@
       cockpit
       ethtool
       exiftool
+      ffmpeg
       lm_sensors
       netdata
       rclone
