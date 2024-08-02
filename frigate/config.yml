@@ -5,8 +5,10 @@ mqtt:
   topic_prefix: zigbee2mqtt/frigate
   client_id: frigate
 
-audio:
-  enabled: True
+detectors:
+  coral:
+    type: edgetpu
+    device: usb
 
 ffmpeg:
   output_args:
@@ -37,7 +39,6 @@ cameras:
             - detect
             - audio
     detect:
-      enabled: False
       width: 640
       height: 480
       fps: 10

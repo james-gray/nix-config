@@ -7,7 +7,7 @@ services:
     image: ghcr.io/blakeblackshear/frigate:stable
     shm_size: "64mb" # update for your cameras based on https://docs.frigate.video/frigate/installation/#calculating-required-shm-size
     devices:
-      - /dev/dri/renderD128:/dev/dri/renderD128 # For intel hwaccel, needs to be updated for your hardware
+      - /dev/bus/usb:/dev/bus/usb
     volumes:
       - /tank9000/ds1/frigate/config:/config
       - /home/jamesgray/code/nix-config/frigate/config.yml:/config/config.yml
