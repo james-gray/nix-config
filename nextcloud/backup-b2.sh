@@ -24,7 +24,7 @@ export RCLONE_CONFIG_B2_ACCOUNT=$RCLONE_CONFIG_B2_ACCOUNT
 export RCLONE_CONFIG_B2_KEY=$RCLONE_CONFIG_B2_KEY
 export RCLONE_FAST_LIST=1
 
-# Put NextCloud into maintenance mode. 
+# Put NextCloud into maintenance mode.
 # This ensures consistency between the database and data directory.
 docker exec -u www-data nextcloud-aio-nextcloud php occ maintenance:mode --on
 

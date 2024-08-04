@@ -14,6 +14,7 @@ services:
       - NEXTCLOUD_DATADIR=/tank9000/ds1/nextcloud
       - PHP_MEMORY_LIMIT=1024M
       - PHP_UPLOAD_LIMIT=1024M
+      - NEXTCLOUD_ADDITIONAL_PHP_EXTENSIONS=imagick libva-utils libva-vdpau-driver libva-intel-driver intel-media-driver mesa-va-gallium
     image: nextcloud/all-in-one:latest
 volumes:
   # NOTE: Need to create the docker volume first: $ docker volume create nextcloud_aio_mastercontainer
