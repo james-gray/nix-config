@@ -1,5 +1,5 @@
 mqtt:
-  enabled: True
+  enabled: true
   host: 10.0.0.233
   port: 1883
   topic_prefix: zigbee2mqtt/frigate
@@ -22,36 +22,36 @@ ffmpeg:
 go2rtc:
   streams:
     doorbell:
-      - "ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus"
+    - ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
     doorbell_sub:
-      - "ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}"
-      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:544/h264Preview_01_sub
+    - ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
+    - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:544/h264Preview_01_sub
 
 cameras:
   doorbell:
-    enabled: True
+    enabled: true
     ffmpeg:
       inputs:
         # High Res stream
-        - path: rtsp://127.0.0.1:8554/doorbell
-          input_args: preset-rtsp-restream
-          roles:
-            - record
+      - path: rtsp://127.0.0.1:8554/doorbell
+        input_args: preset-rtsp-restream
+        roles:
+        - record
         # Low Res stream
-        - path: rtsp://127.0.0.1:8554/doorbell_sub
-          input_args: preset-rtsp-restream
-          roles:
-            - detect
-            - audio
+      - path: rtsp://127.0.0.1:8554/doorbell_sub
+        input_args: preset-rtsp-restream
+        roles:
+        - detect
+        - audio
     detect:
       width: 640
       height: 480
       fps: 10
     objects:
       track:
-        - person
-        - cat
-        - bird
+      - person
+      - cat
+      - bird
     rtmp:
       enabled: false
     snapshots:
