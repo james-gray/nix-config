@@ -5,6 +5,10 @@ mqtt:
   topic_prefix: zigbee2mqtt/frigate
   client_id: frigate
 
+birdseye:
+  enabled: true
+  mode: continuous
+
 detectors:
   coral:
     type: edgetpu
