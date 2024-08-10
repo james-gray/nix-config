@@ -1,6 +1,6 @@
 mqtt:
   enabled: true
-  host: 10.0.0.233
+  host: 192.168.1.68
   port: 1883
   topic_prefix: zigbee2mqtt/frigate
   client_id: frigate
@@ -22,10 +22,10 @@ ffmpeg:
 go2rtc:
   streams:
     doorbell:
-    - ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
+    - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
     doorbell_sub:
-    - ffmpeg:http://10.0.0.244/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
-    - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@10.0.0.244:544/h264Preview_01_sub
+    - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
+    - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.73:544/h264Preview_01_sub
 
 cameras:
   doorbell:
