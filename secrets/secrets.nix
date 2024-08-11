@@ -15,4 +15,6 @@ in
   "backup-b2-env.age".publicKeys = users ++ systems;
   "immich-env.age".publicKeys = users ++ systems;
   "frigate-env.age".publicKeys = users ++ systems;
+  "unifi-init-mongo.age".publicKeys = users ++ systems;
+  "unifi-network-application-env.age".publicKeys = users ++ systems;
 }

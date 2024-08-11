@@ -48,6 +48,8 @@
       "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
       "immich-env" = { file = ./secrets/immich-env.age; };
       "frigate-env" = { file = ./secrets/frigate-env.age; };
+      "unifi-init-mongo" = { file = ./secrets/unifi-init-mongo.age; };
+      "unifi-network-application-env" = { file = ./secrets/unifi-network-application-env.age; };
     };
   };
 
@@ -476,6 +478,25 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./scrutiny/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      unifi-network-application = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./unifi-network-application/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./unifi-network-application/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;
