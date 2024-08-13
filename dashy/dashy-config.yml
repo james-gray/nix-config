@@ -85,9 +85,30 @@ sections:
       url: http://hal9000:3001
       target: newtab
       statusCheck: false
+- name: Network
+  icon: fas fa-globe
+  items:
     - title: AdGuard Home
       description: DNS-based adblock. Must be on home network to access.
       icon: hl-adguardhome
-      url: http://10.0.0.65:8083
+      url: http://192.168.1.88:8083
+      target: newtab
+      statusCheck: false
+    - title: UniFi Network Application
+      description: UniFi Wi-Fi access point configurator. James' MacBook Pro must be on and connected to Tailnet to access.
+      icon: hl-unifi
+      url: https://100.111.96.38:8443
+      target: newtab
+      statusCheck: false
+    - title: EdgeMax EdgeRouter-X SRP Interface
+      description: Router configuration admin interface. Must be on home network to access.
+      icon: fas fa-network-wired
+      url: https://192.168.1.1
+      target: newtab
+      statusCheck: false
+    - title: Shaw Gateway Interface
+      description: Modem configuration admin interface. Must be on home network to access.
+      icon: fas fa-network-wired
+      url: https://10.0.0.1
       target: newtab
       statusCheck: false
