@@ -91,18 +91,18 @@ sections:
     - title: AdGuard Home
       description: DNS-based adblock. Must be on home network to access.
       icon: hl-adguardhome
-      url: http://192.168.1.88:8083
+      url: http://192.168.1.1:8080
       target: newtab
       statusCheck: false
     - title: UniFi Network Application
-      description: UniFi Wi-Fi access point configurator. James' MacBook Pro must be on and connected to Tailnet to access.
+      description: UniFi Wi-Fi admin panel. James' MBP must be on Tailnet to access.
       icon: hl-unifi
       url: https://100.111.96.38:8443
       target: newtab
       statusCheck: false
     - title: EdgeMax EdgeRouter-X SRP Interface
       description: Router configuration admin interface. Must be on home network to access.
-      icon: fas fa-network-wired
+      icon: hl-unifi
       url: https://192.168.1.1
       target: newtab
       statusCheck: false
