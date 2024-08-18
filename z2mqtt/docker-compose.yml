@@ -1,0 +1,16 @@
+---
+version: '3'
+services:
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    restart: unless-stopped
+    devices:
+        - /dev/serial/by-id/usb-Silicon_Labs_Sonoff_Zigbee_3.0_USB_Dongle_Plus_0001-if00-port0:/dev/ttyUSB0
+    ports:
+        - 58080:8080
+    volumes:
+        - /tank9000/ds1/hass/z2mqttdata:/app/data
+        - /run/udev:/run/udev:ro
+    environment:
+        - TZ=America/Vancouver
+    image: koenkk/zigbee2mqtt

@@ -81,6 +81,19 @@
     };
     hardware = { openrgb.enable = true; };
 
+    mosquitto = {
+      enable = true;
+      listeners = [
+        {
+          acl = [ "pattern readwrite #" ];
+          omitPasswordAuth = true;
+          settings = {
+            allow_anonymous = true;
+          };
+        }
+      ];
+    };
+
     netdata = {
       enable = true;
 
@@ -398,7 +411,7 @@
       enable = true;
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 ];
+      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 1883 ];
       allowedUDPPorts =
         [ 22 2049 137 138 139 445 config.services.tailscale.port ];
     };
@@ -691,6 +704,25 @@
           sqlite3 /tank9000/ds1/vaultwarden/data/db.sqlite3 ".backup '/tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3'"
           chown -R www-data:www-data /tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3
         '';
+      };
+      zigbee2mqtt = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./z2mqtt/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./z2mqtt/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
       };
     };
     # Disable sleep! Servers can sleep when they're dead!
