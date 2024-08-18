@@ -1,0 +1,15 @@
+---
+version: "3"
+services:
+  home-assistant:
+    container_name: homeassistant
+    privileged: true
+    restart: unless-stopped
+    environment:
+      - TZ=America/Vancouver
+    volumes:
+      - /home/jamesgray/code/homeassistant:/config
+      - /tank9000/ds1/hass/certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: host
+    image: ghcr.io/home-assistant/home-assistant:stable
