@@ -49,6 +49,7 @@
       "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
       "immich-env" = { file = ./secrets/immich-env.age; };
       "frigate-env" = { file = ./secrets/frigate-env.age; };
+      "wordpress-env" = { file = ./secrets/wordpress-env.age; };
     };
   };
 
@@ -117,6 +118,8 @@
           sslCertificate = "/tank9000/ds1/nginx/certs/cert.pem";
           sslCertificateKey = "/tank9000/ds1/nginx/certs/key.pem";
         }; in {
+          "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
+          "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "actual.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
           "hass.jgray.me" = ( SSL // {
             locations = {
@@ -719,6 +722,25 @@
           sqlite3 /tank9000/ds1/vaultwarden/data/db.sqlite3 ".backup '/tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3'"
           chown -R www-data:www-data /tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3
         '';
+      };
+      wordpress = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./wordpress/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./wordpress/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
       };
       zigbee2mqtt = {
         enable = true;
