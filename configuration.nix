@@ -325,6 +325,22 @@
         spotlight = no
       '';
       shares = {
+        "share" = {
+          path = "/tank9000/ds1/share";
+          browseable = "yes";
+          "read only" = "no";
+          "inherit acls" = "yes";
+
+          "write list" = "jamesgray";
+          "create mask" = "0600";
+          "directory mask" = "0700";
+          "case sensitive" = "true";
+          "default case" = "lower";
+          "preserve case" = "yes";
+          "short preserve case" = "yes";
+
+          "valid users" = "jamesgray";
+        };
         "Time Capsule" = {
           path = "/tank9000/timemachine";
           browseable = "yes";
