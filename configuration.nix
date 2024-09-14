@@ -371,8 +371,7 @@
         autosnap = true;
         recursive = true;
         hourly = 24;
-        daily = 30;
-        monthly = 3;
+        daily = 7;
       };
     };
 
