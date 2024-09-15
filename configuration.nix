@@ -332,17 +332,19 @@
           path = "/tank9000/ds1/share";
           browseable = "yes";
           "read only" = "no";
+          "writeable" = "yes";
           "inherit acls" = "yes";
 
-          "write list" = "jamesgray";
-          "create mask" = "0600";
-          "directory mask" = "0700";
+          "write list" = "james.gray";
+          "create mask" = "0644";
+          "directory mask" = "0755";
           "case sensitive" = "true";
           "default case" = "lower";
           "preserve case" = "yes";
           "short preserve case" = "yes";
 
-          "valid users" = "jamesgray";
+          "force user" = "james.gray";
+          "valid users" = "james.gray";
         };
         "Time Capsule" = {
           path = "/tank9000/timemachine";
