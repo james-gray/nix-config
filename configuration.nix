@@ -204,6 +204,7 @@
           });
           "lubelogger.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
           "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
+          "navidrome.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
           "nextcloud.jgray.me" = ( SSL // {
             extraConfig = ''
               if ($scheme = "http") {
@@ -593,6 +594,25 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./mealie/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      navidrome = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./navidrome/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./navidrome/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;

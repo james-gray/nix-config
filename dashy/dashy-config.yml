@@ -43,6 +43,11 @@ sections:
     url: https://mealie.jgray.me/
     icon: hl-mealie
     statusCheck: true
+  - title: Navidrome
+    description: Music server.
+    url: https://navidrome.jgray.me/
+    icon: hl-navidrome
+    statusCheck: true
   - title: Actual
     description: Budgeting software / YNAB clone.
     url: https://actual.jgray.me/
