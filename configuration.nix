@@ -121,6 +121,7 @@
           "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "actual.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
+          "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
           "hass.jgray.me" = ( SSL // {
             locations = {
               "/" = {
@@ -135,6 +136,7 @@
               };
             };
           });
+          "ipod.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:14533/"; });
           "jellyfin.jgray.me" = ( SSL // {
             extraConfig = ''
               if ($scheme = "http") {
@@ -204,7 +206,6 @@
           });
           "lubelogger.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
           "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
-          "navidrome.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
           "nextcloud.jgray.me" = ( SSL // {
             extraConfig = ''
               if ($scheme = "http") {
@@ -472,6 +473,25 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      bandcamp = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./bandcamp/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./bandcamp/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       dashy = {
         enable = true;
         serviceConfig = {
@@ -547,6 +567,25 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      ipod = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./ipod/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./ipod/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       jellyfin = {
         enable = true;
         serviceConfig = {
@@ -594,25 +633,6 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./mealie/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      navidrome = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;

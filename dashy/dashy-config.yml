@@ -43,9 +43,14 @@ sections:
     url: https://mealie.jgray.me/
     icon: hl-mealie
     statusCheck: true
-  - title: Navidrome
-    description: Music server.
-    url: https://navidrome.jgray.me/
+  - title: Bandcamp (Navidrome)
+    description: Bandcamp music collection Navidrome server.
+    url: https://bandcamp.jgray.me/
+    icon: hl-navidrome
+    statusCheck: true
+  - title: iPod (Navidrome)
+    description: iPod music collection Navidrome server.
+    url: https://ipod.jgray.me/
     icon: hl-navidrome
     statusCheck: true
   - title: Actual

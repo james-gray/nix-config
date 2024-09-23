@@ -1,11 +1,11 @@
 version: "3"
 services:
-  navidrome:
-    container_name: navidrome
+  ipod:
+    container_name: ipod
     image: deluan/navidrome:latest
     user: 1000:100 # should be owner of volumes
     ports:
-      - "4533:4533"
+      - "14533:4533"
     restart: unless-stopped
     environment:
       # Optional: put your config options customization here. Examples:
@@ -14,5 +14,5 @@ services:
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
     volumes:
-      - "/tank9000/ds1/navidrome/data:/data"
-      - "/tank9000/ds1/navidrome/music:/music:ro"
+      - "/tank9000/ds1/navidrome/data/iPod:/data"
+      - "/tank9000/ds1/navidrome/music/iPod:/music:ro"
