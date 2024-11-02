@@ -36,6 +36,7 @@
       rclone
       sanoid
       smartmontools
+      speedtest-cli
       sqlite
       zfs-prune-snapshots
     ];
