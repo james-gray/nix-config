@@ -11,6 +11,11 @@ pageInfo:
 # Optional app settings and configuration
 appConfig:
   theme: default
+  auth:
+    users:
+    - user: jamesgray
+      hash: 6DF68A88E769A29B0B69654B1B52A4765B510B7705FF555A63BDFC48E9F67547
+      type: admin
 
 # Main content - An array of sections, each containing an array of items
 sections:
