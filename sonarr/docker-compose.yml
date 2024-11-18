@@ -1,0 +1,16 @@
+---
+services:
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=1003
+      - PGID=986
+      - TZ=America/Vancouver
+    volumes:
+      - /tank9000/ds1/jellyfin/sonarr/data:/config
+      - /tank9000/ds1/jellyfin/media:/tv #optional
+      - /tank9000/ds1/jellyfin/download-client-downloads:/data/downloads #optional
+    ports:
+      - 8989:8989
+    restart: unless-stopped

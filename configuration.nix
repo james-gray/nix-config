@@ -788,6 +788,24 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      sonarr = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sonarr/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sonarr/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       vaultwarden = {
         enable = true;
         serviceConfig = {
