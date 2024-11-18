@@ -1,0 +1,16 @@
+---
+services:
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=1003
+      - PGID=986
+      - TZ=America/Vancouver
+    volumes:
+      - /tank9000/ds1/jellyfin/radarr/data:/config
+      - /tank9000/ds1/jellyfin/media:/movies #optional
+      - /tank9000/ds1/jellyfin/download-client-downloads:/data/downloads #optional
+    ports:
+      - 7878:7878
+    restart: unless-stopped

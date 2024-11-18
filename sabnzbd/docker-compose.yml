@@ -1,0 +1,16 @@
+---
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    environment:
+      - PUID=1003
+      - PGID=986
+      - TZ=America/Vancouver
+    volumes:
+      - /tank9000/ds1/jellyfin/sabnzbd-config:/config
+      - /tank9000/ds1/jellyfin/download-client-downloads:/data/downloads
+      - /tank9000/ds1/jellyfin/incomplete-download-client-downloads:/data/incomplete-downloads
+    ports:
+      - 7979:8080
+    restart: unless-stopped

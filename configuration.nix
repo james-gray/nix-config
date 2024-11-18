@@ -722,6 +722,42 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      radarr = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./radarr/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./radarr/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      sabnzbd = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sabnzbd/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sabnzbd/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       scrutiny-collector-metrics = {
         serviceConfig = {
           User = "root";
