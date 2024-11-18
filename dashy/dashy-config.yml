@@ -38,6 +38,16 @@ sections:
     url: https://jellyfin.jgray.me/
     icon: hl-jellyfin
     statusCheck: true
+  - title: Sonarr
+    description: TV Series Media Manager. Must be on Tailnet to access.
+    url: http://hal9000:8989
+    icon: hl-sonarr
+    statusCheck: false
+  - title: Radarr
+    description: Movie Media Manager. Must be on Tailnet to access.
+    url: http://hal9000:7878
+    icon: hl-radarr
+    statusCheck: false
   - title: Vaultwarden
     description: Password manager.
     url: https://vw.jgray.me/
