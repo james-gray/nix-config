@@ -349,6 +349,25 @@
           "force user" = "james.gray";
           "valid users" = "james.gray";
         };
+        "jellyfin" = {
+          path = "/tank9000/ds1/jellyfin";
+
+          browseable = "yes";
+          "read only" = "no";
+          "writeable" = "yes";
+          "inherit acls" = "yes";
+
+          "write list" = "james.gray";
+          "create mask" = "0644";
+          "directory mask" = "0755";
+          "case sensitive" = "true";
+          "default case" = "lower";
+          "preserve case" = "yes";
+          "short preserve case" = "yes";
+
+          "force user" = "james.gray";
+          "valid users" = "james.gray";
+        };
         "Time Capsule" = {
           path = "/tank9000/timemachine";
           browseable = "yes";
