@@ -58,6 +58,11 @@ sections:
     url: https://mealie.jgray.me/
     icon: hl-mealie
     statusCheck: true
+  - title: Miniflux
+    description: RSS reader.
+    url: https://miniflux.jgray.me/
+    icon: hl-miniflux
+    statusCheck: true
   - title: Bandcamp (Navidrome)
     description: Bandcamp music collection Navidrome server.
     url: https://bandcamp.jgray.me/

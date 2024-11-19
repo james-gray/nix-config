@@ -1,0 +1,22 @@
+services:
+  miniflux:
+    image: miniflux/miniflux:latest
+    ports:
+      - "280:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - /run/agenix/miniflux-env
+  db:
+    image: postgres:17-alpine
+    env_file:
+      - /run/agenix/miniflux-db-env
+    volumes:
+      - miniflux-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "miniflux"]
+      interval: 10s
+      start_period: 30s
+volumes:
+  miniflux-db:

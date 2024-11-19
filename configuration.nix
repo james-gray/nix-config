@@ -46,6 +46,8 @@
     secrets = {
       "lubelogger-env" = { file = ./secrets/lubelogger-env.age; };
       "mealie-env" = { file = ./secrets/mealie-env.age; };
+      "miniflux-env" = { file = ./secrets/miniflux-env.age; };
+      "miniflux-db-env" = { file = ./secrets/miniflux-db-env.age; };
       "vw-env" = { file = ./secrets/vw-env.age; };
       "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
       "immich-env" = { file = ./secrets/immich-env.age; };
@@ -207,6 +209,7 @@
           });
           "lubelogger.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
           "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
+          "miniflux.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:280/"; });
           "nextcloud.jgray.me" = ( SSL // {
             extraConfig = ''
               if ($scheme = "http") {
@@ -653,6 +656,25 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./mealie/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      miniflux = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./miniflux/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./miniflux/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;
