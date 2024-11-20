@@ -22,10 +22,10 @@ ffmpeg:
 go2rtc:
   streams:
     doorbell:
-    - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
+      - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
     doorbell_sub:
-    - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
-    - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.73:544/h264Preview_01_sub
+      - ffmpeg:http://192.168.1.73/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.73:544/h264Preview_01_sub
 
 cameras:
   doorbell:
@@ -33,16 +33,16 @@ cameras:
     ffmpeg:
       inputs:
         # High Res stream
-      - path: rtsp://127.0.0.1:8554/doorbell
-        input_args: preset-rtsp-restream
-        roles:
-        - record
+        - path: rtsp://127.0.0.1:8554/doorbell
+          input_args: preset-rtsp-restream
+          roles:
+            - record
         # Low Res stream
-      - path: rtsp://127.0.0.1:8554/doorbell_sub
-        input_args: preset-rtsp-restream
-        roles:
-        - detect
-        - audio
+        - path: rtsp://127.0.0.1:8554/doorbell_sub
+          input_args: preset-rtsp-restream
+          roles:
+            - detect
+            - audio
     detect:
       width: 640
       height: 480
@@ -51,16 +51,14 @@ cameras:
       filters:
         person:
           mask:
-          - 0,480,246,480,234,0,0,0
+            - 0,480,246,480,234,0,0,0
         car:
           mask:
-          - 640,266,532,263,525,317,640,334
+            - 640,266,532,263,525,317,640,334
       track:
-      - person
-      - cat
-      - bird
-    rtmp:
-      enabled: false
+        - person
+        - cat
+        - bird
     snapshots:
       enabled: true
     record:
@@ -72,4 +70,5 @@ cameras:
           default: 10
     motion:
       mask:
-      - 0,480,246,480,234,0,0,0
+        - 0,480,246,480,234,0,0,0
+version: 0.14
