@@ -44,14 +44,17 @@
 
   age = {
     secrets = {
+      "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
+      "bandcamp-env" = { file = ./secrets/bandcamp-env.age; };
+      "frigate-env" = { file = ./secrets/frigate-env.age; };
+      "immich-env" = { file = ./secrets/immich-env.age; };
+      "ipod-env" = { file = ./secrets/ipod-env.age; };
       "lubelogger-env" = { file = ./secrets/lubelogger-env.age; };
       "mealie-env" = { file = ./secrets/mealie-env.age; };
-      "miniflux-env" = { file = ./secrets/miniflux-env.age; };
       "miniflux-db-env" = { file = ./secrets/miniflux-db-env.age; };
+      "miniflux-env" = { file = ./secrets/miniflux-env.age; };
+      "music-env" = { file = ./secrets/music-env.age; };
       "vw-env" = { file = ./secrets/vw-env.age; };
-      "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
-      "immich-env" = { file = ./secrets/immich-env.age; };
-      "frigate-env" = { file = ./secrets/frigate-env.age; };
       "wordpress-env" = { file = ./secrets/wordpress-env.age; };
     };
   };

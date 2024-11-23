@@ -13,6 +13,8 @@ services:
       ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
+    env_file:
+      - /run/agenix/ipod-env
     volumes:
       - "/tank9000/ds1/navidrome/data/iPod:/data"
       - "/tank9000/ds1/navidrome/music/iPod:/music:ro"

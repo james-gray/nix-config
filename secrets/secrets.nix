@@ -9,11 +9,14 @@ let
   systems = [ root_ed25519 root_rsa ];
 in
 {
+  "bandcamp-env.age".publicKeys = users ++ systems;
+  "ipod-env.age".publicKeys = users ++ systems;
   "lubelogger-env.age".publicKeys = users ++ systems;
   "vw-env.age".publicKeys = users ++ systems;
   "mealie-env.age".publicKeys = users ++ systems;
   "miniflux-env.age".publicKeys = users ++ systems;
   "miniflux-db-env.age".publicKeys = users ++ systems;
+  "music-env.age".publicKeys = users ++ systems;
   "backup-b2-env.age".publicKeys = users ++ systems;
   "immich-env.age".publicKeys = users ++ systems;
   "frigate-env.age".publicKeys = users ++ systems;

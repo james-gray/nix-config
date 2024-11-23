@@ -13,6 +13,8 @@ services:
       ND_LOGLEVEL: info
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
+    env_file:
+      - /run/agenix/music-env
     volumes:
       - "/tank9000/ds1/navidrome/data/Music:/data"
       - "/tank9000/ds1/navidrome/music/Music:/music:ro"
