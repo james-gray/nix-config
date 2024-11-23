@@ -210,6 +210,7 @@
           "lubelogger.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
           "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
           "miniflux.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:280/"; });
+          "music.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:24533/"; });
           "nextcloud.jgray.me" = ( SSL // {
             extraConfig = ''
               if ($scheme = "http") {
@@ -627,6 +628,24 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      lidarr = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./lidarr/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./lidarr/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       lubelogger = {
         enable = true;
         serviceConfig = {
@@ -675,6 +694,25 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./miniflux/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      music = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./navidrome/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./navidrome/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;
@@ -773,6 +811,24 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./sabnzbd/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      sabnzbdmusic = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sabnzbdmusic/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./sabnzbdmusic/docker-compose.yml
             } stop
           '';
         };

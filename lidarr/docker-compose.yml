@@ -1,0 +1,16 @@
+---
+services:
+  lidarr:
+    image: lscr.io/linuxserver/lidarr:latest
+    container_name: lidarr
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Vancouver
+    volumes:
+      - /tank9000/ds1/navidrome/lidarr/data:/config
+      - /tank9000/ds1/navidrome/music/Music:/music
+      - /tank9000/ds1/navidrome/download-client-downloads:/data/downloads
+    ports:
+      - 8686:8686
+    restart: unless-stopped

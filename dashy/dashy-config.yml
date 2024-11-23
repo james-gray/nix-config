@@ -33,21 +33,6 @@ sections:
     url: https://hass.jgray.me/
     icon: hl-home-assistant
     statusCheck: true
-  - title: Jellyfin
-    description: Home media server.
-    url: https://jellyfin.jgray.me/
-    icon: hl-jellyfin
-    statusCheck: true
-  - title: Sonarr
-    description: TV Series Media Manager. Must be on Tailnet to access.
-    url: http://hal9000:8989
-    icon: hl-sonarr
-    statusCheck: false
-  - title: Radarr
-    description: Movie Media Manager. Must be on Tailnet to access.
-    url: http://hal9000:7878
-    icon: hl-radarr
-    statusCheck: false
   - title: Vaultwarden
     description: Password manager.
     url: https://vw.jgray.me/
@@ -63,16 +48,6 @@ sections:
     url: https://miniflux.jgray.me/
     icon: hl-miniflux
     statusCheck: true
-  - title: Bandcamp (Navidrome)
-    description: Bandcamp music collection Navidrome server.
-    url: https://bandcamp.jgray.me/
-    icon: hl-navidrome
-    statusCheck: true
-  - title: iPod (Navidrome)
-    description: iPod music collection Navidrome server.
-    url: https://ipod.jgray.me/
-    icon: hl-navidrome
-    statusCheck: true
   - title: Actual
     description: Budgeting software / YNAB clone.
     url: https://actual.jgray.me/
@@ -87,6 +62,44 @@ sections:
     description: NVR/CCTV application. Must be on Tailnet to access.
     url: http://hal9000:5000/
     icon: hl-frigate
+    statusCheck: false
+- name: Media
+  icon: fas fa-compact-disc
+  items:
+  - title: Jellyfin
+    description: Home media server.
+    url: https://jellyfin.jgray.me/
+    icon: hl-jellyfin
+    statusCheck: true
+  - title: Bandcamp (Navidrome)
+    description: Bandcamp music collection Navidrome server.
+    url: https://bandcamp.jgray.me/
+    icon: hl-navidrome
+    statusCheck: true
+  - title: iPod (Navidrome)
+    description: iPod music collection Navidrome server.
+    url: https://ipod.jgray.me/
+    icon: hl-navidrome
+    statusCheck: true
+  - title: Music (Navidrome)
+    description: Music collection (CDs and records) Navidrome server.
+    url: https://music.jgray.me/
+    icon: hl-navidrome
+    statusCheck: true
+  - title: Sonarr
+    description: TV Series Media Manager. Must be on Tailnet to access.
+    url: http://hal9000:8989
+    icon: hl-sonarr
+    statusCheck: false
+  - title: Radarr
+    description: Movie Media Manager. Must be on Tailnet to access.
+    url: http://hal9000:7878
+    icon: hl-radarr
+    statusCheck: false
+  - title: Lidarr
+    description: Music Media Manager. Must be on Tailnet to access.
+    url: http://hal9000:8686
+    icon: hl-lidarr
     statusCheck: false
 - name: Monitoring
   icon: fas fa-chart-line

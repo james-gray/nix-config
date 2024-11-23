@@ -1,0 +1,16 @@
+---
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbdmusic
+    environment:
+      - PUID=1000
+      - PGID=100
+      - TZ=America/Vancouver
+    volumes:
+      - /tank9000/ds1/navidrome/sabnzbd-config:/config
+      - /tank9000/ds1/navidrome/download-client-downloads:/data/downloads
+      - /tank9000/ds1/navidrome/incomplete-download-client-downloads:/data/incomplete-downloads
+    ports:
+      - 7777:8080
+    restart: unless-stopped
