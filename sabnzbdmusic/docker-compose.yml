@@ -4,8 +4,8 @@ services:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbdmusic
     environment:
-      - PUID=1000
-      - PGID=100
+      - PUID=1003
+      - PGID=986
       - TZ=America/Vancouver
     volumes:
       - /tank9000/ds1/navidrome/sabnzbd-config:/config

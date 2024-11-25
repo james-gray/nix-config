@@ -3,7 +3,7 @@ services:
   bandcamp:
     container_name: bandcamp
     image: deluan/navidrome:latest
-    user: 1000:100 # should be owner of volumes
+    user: 1003:986 # should be owner of volumes
     ports:
       - "4533:4533"
     restart: unless-stopped
