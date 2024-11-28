@@ -128,6 +128,7 @@
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "actual.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
           "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
+          "christmas.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:32768/"; });
           "hass.jgray.me" = ( SSL // {
             locations = {
               "/" = {
@@ -533,6 +534,24 @@
             } stop
           '';
           RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      christmas-community = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./christmas-community/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./christmas-community/docker-compose.yml
+            } stop
+          '';
         };
         after = [ "docker.service" ];
         requires = [ "docker.service" ];

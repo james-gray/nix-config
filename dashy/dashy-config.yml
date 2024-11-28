@@ -58,6 +58,12 @@ sections:
     url: https://lubelogger.jgray.me/
     icon: hl-lubelogger
     statusCheck: true
+  - title: Christmas Community
+    description: Christmas wishlist app.
+    icon: favicon
+    url: https://christmas.jgray.me/
+    target: newtab
+    statusCheck: true
   - title: Frigate
     description: NVR/CCTV application. Must be on Tailnet to access.
     url: http://hal9000:5000/
