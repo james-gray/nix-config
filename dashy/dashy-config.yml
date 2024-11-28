@@ -128,6 +128,11 @@ sections:
       url: http://hal9000:3001
       target: newtab
       statusCheck: false
+    - title: Portainer
+      description: Docker container manager. Must be on Tailnet to access.
+      icon: hl-portainer
+      url: http://hal9000:9000
+      statusCheck: false
 - name: Network
   icon: fas fa-globe
   items:

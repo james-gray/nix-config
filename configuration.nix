@@ -786,6 +786,24 @@
           rsync -r -c --progress --chown=jamesgray:users "/tank9000/ds1/nextcloud/admin/files/Music/Bandcamp/" "/tank9000/ds1/navidrome/music/Bandcamp"
         '';
       };
+      portainer = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./portainer/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./portainer/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       uptime-kuma = {
         enable = true;
         serviceConfig = {
