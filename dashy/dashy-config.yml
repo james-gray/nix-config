@@ -145,7 +145,7 @@ sections:
     - title: AdGuard Home
       description: DNS-based adblock. Must be on home network to access.
       icon: hl-adguardhome
-      url: http://192.168.1.1:8080
+      url: http://192.168.1.57:8080
       target: newtab
       statusCheck: false
     - title: UniFi Network Application
