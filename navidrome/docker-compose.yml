@@ -14,6 +14,7 @@ services:
       ND_SESSIONTIMEOUT: 24h
       ND_BASEURL: ""
       ND_SCANNER_GROUPALBUMRELEASES: "true"
+      ND_ENABLETRANSCODINGCONFIG: "true"
     env_file:
       - /run/agenix/music-env
     volumes:

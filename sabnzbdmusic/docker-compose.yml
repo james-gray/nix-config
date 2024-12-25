@@ -1,6 +1,6 @@
 ---
 services:
-  sabnzbd:
+  sabnzbdmusic:
     image: lscr.io/linuxserver/sabnzbd:latest
     container_name: sabnzbdmusic
     environment:

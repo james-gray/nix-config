@@ -793,18 +793,6 @@
           /home/jamesgray/code/nix-config/nextcloud/backup-b2.sh
         '';
       };
-      nextcloud-jellyfin-sync = {
-        serviceConfig = {
-          User = "root";
-          Group = "root";
-          Type = "oneshot";
-        };
-        path = with pkgs; [ pkgs.rsync ];
-        script = ''
-          rsync -r -c --progress --chown=jamesgray:users "/tank9000/ds1/nextcloud/admin/files/Family Home Videos/" "/tank9000/ds1/jellyfin/media/Family Home Videos"
-          rsync -r -c --progress --chown=jamesgray:users "/tank9000/ds1/nextcloud/admin/files/Music/Bandcamp/" "/tank9000/ds1/navidrome/music/Bandcamp"
-        '';
-      };
       portainer = {
         enable = true;
         serviceConfig = {
