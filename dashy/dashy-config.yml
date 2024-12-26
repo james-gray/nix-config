@@ -166,3 +166,9 @@ sections:
       url: https://10.0.0.1
       target: newtab
       statusCheck: false
+    - title: Zigbee2MQTT
+      description: MQTT management web interface. Must be on Tailnet to access.
+      icon: hl-mqtt
+      url: http://hal9000:58080
+      target: newtab
+      statusCheck: false
