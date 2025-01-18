@@ -14,3 +14,10 @@ services:
     ports:
       - 8686:8686
     restart: unless-stopped
+    networks:
+      - arr
+      - default
+networks:
+  arr:
+    name: arr
+    external: true

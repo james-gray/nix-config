@@ -14,3 +14,10 @@ services:
     ports:
       - 7777:8080
     restart: unless-stopped
+    networks:
+      arr:
+        ipv4_address: 10.5.0.24
+networks:
+  arr:
+    name: arr
+    external: true
