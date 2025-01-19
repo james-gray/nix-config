@@ -10,6 +10,7 @@ let
 in
 {
   "bandcamp-env.age".publicKeys = users ++ systems;
+  "bb-env.age".publicKeys = users ++ systems;
   "ipod-env.age".publicKeys = users ++ systems;
   "lubelogger-env.age".publicKeys = users ++ systems;
   "vw-env.age".publicKeys = users ++ systems;

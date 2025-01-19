@@ -45,6 +45,7 @@
   age = {
     secrets = {
       "backup-b2-env" = { file = ./secrets/backup-b2-env.age; };
+      "bb-env" = { file = ./secrets/bb-env.age; };
       "bandcamp-env" = { file = ./secrets/bandcamp-env.age; };
       "frigate-env" = { file = ./secrets/frigate-env.age; };
       "immich-env" = { file = ./secrets/immich-env.age; };
@@ -128,6 +129,7 @@
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "actual.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
           "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
+          "bb.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:8100/"; });
           "christmas.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:32768/"; });
           "hass.jgray.me" = ( SSL // {
             locations = {
@@ -531,6 +533,25 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./bandcamp/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      bb = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./bb/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./bb/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;

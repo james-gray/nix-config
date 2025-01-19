@@ -1,0 +1,12 @@
+version: "2.1"
+services:
+  babybuddy:
+    image: lscr.io/linuxserver/babybuddy
+    container_name: babybuddy
+    volumes:
+      - /tank9000/ds1/bb/appdata:/config
+    ports:
+      - 8100:8000
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/bb-env
