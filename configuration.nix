@@ -292,54 +292,54 @@
 
     samba = {
       enable = true;
-      securityType = "user";
-      extraConfig = ''
-        workgroup = WORKGROUP
-        server string = smbnix
-        netbios name = smbnix
-        server role = standalone server
-        dns proxy = no
-        ea support = yes
+      settings = {
+        global = {
+          "workgroup" = "WORKGROUP";
+          "security" = "user";
+          "server string" = "smbnix";
+          "netbios name" = "smbnix";
+          "server role" = "standalone server";
+          "dns proxy" = "no";
+          "ea support" = "yes";
 
-        pam password change = yes
-        map to guest = bad user
-        usershare allow guests = yes
-        create mask = 0664
-        force create mode = 0664
-        directory mask = 0775
-        force directory mode = 0775
-        follow symlinks = yes
-        load printers = no
-        printing = bsd
-        printcap name = /dev/null
-        disable spoolss = yes
-        strict locking = no
-        aio read size = 0
-        aio write size = 0
-        vfs objects = acl_xattr catia fruit streams_xattr
-        inherit permissions = yes
+          "pam password change" = "yes";
+          "map to guest" = "bad user";
+          "usershare allow guests" = "yes";
+          "create mask" = "0664";
+          "force create mode" = "0664";
+          "directory mask" = "0775";
+          "force directory mode" = "0775";
+          "follow symlinks" = "yes";
+          "load printers" = "no";
+          "printing" = "bsd";
+          "printcap name" = "/dev/null";
+          "disable spoolss" = "yes";
+          "strict locking" = "no";
+          "aio read size" = "0";
+          "aio write size" = "0";
+          "vfs objects" = "acl_xattr catia fruit streams_xattr";
+          "inherit permissions" = "yes";
 
-        # Security
-        client ipc max protocol = SMB3
-        client ipc min protocol = SMB2
-        client max protocol = SMB3
-        client min protocol = SMB2
-        server max protocol = SMB3
-        server min protocol = SMB2
+          # Security
+          "client ipc max protocol" = "SMB3";
+          "client ipc min protocol" = "SMB2";
+          "client max protocol" = "SMB3";
+          "client min protocol" = "SMB2";
+          "server max protocol" = "SMB3";
+          "server min protocol" = "SMB2";
 
-        # Time Machine
-        fruit:aapl = yes
-        fruit:delete_empty_adfiles = yes
-        fruit:metadata = stream
-        fruit:model = MacSamba
-        fruit:nfs_aces = no
-        fruit:posix_rename = yes
-        fruit:time machine = yes
-        fruit:veto_appledouble = no
-        fruit:wipe_intentionally_left_blank_rfork = yes
-        spotlight = no
-      '';
-      shares = {
+          # Time Machine
+          "fruit:aapl" = "yes";
+          "fruit:delete_empty_adfiles" = "yes";
+          "fruit:metadata" = "stream";
+          "fruit:model" = "MacSamba";
+          "fruit:nfs_aces" = "no";
+          "fruit:posix_rename" = "yes";
+          "fruit:time machine" = "yes";
+          "fruit:veto_appledouble" = "no";
+          "fruit:wipe_intentionally_left_blank_rfork" = "yes";
+          "spotlight" = "no";
+        };
         "share" = {
           path = "/tank9000/ds1/share";
           browseable = "yes";
