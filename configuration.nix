@@ -48,7 +48,6 @@
       "bb-env" = { file = ./secrets/bb-env.age; };
       "bandcamp-env" = { file = ./secrets/bandcamp-env.age; };
       "frigate-env" = { file = ./secrets/frigate-env.age; };
-      "immich-env" = { file = ./secrets/immich-env.age; };
       "ipod-env" = { file = ./secrets/ipod-env.age; };
       "lubelogger-env" = { file = ./secrets/lubelogger-env.age; };
       "mealie-env" = { file = ./secrets/mealie-env.age; };
@@ -626,25 +625,6 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./hass/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      immich = {
-        enable = false;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose --env-file /run/agenix/immich-env -f ${
-              ./immich/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./immich/docker-compose.yml
             } stop
           '';
           RemainAfterExit = true;
