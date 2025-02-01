@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   imports = [
@@ -22,6 +22,13 @@
     };
   };
 
+  fileSystems = {
+    "/media/immich/archive" = {
+      device = "/tank9000/ds1/nextcloud/admin/files/Photos";
+      options = [ "bind" "nofail" ];
+    };
+  };
+
   environment = {
     systemPackages = with pkgs; [
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
@@ -40,6 +47,19 @@
       sqlite
       zfs-prune-snapshots
     ];
+    sessionVariables = {
+      LIBVA_DRIVER_NAME = "iHD";
+    };
+  };
+
+  hardware = {
+    graphics = {
+      enable = true;
+      extraPackages = with pkgs; [
+        intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
+        intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i965
+      ];
+    };
   };
 
   age = {
@@ -101,6 +121,12 @@
       ];
     };
 
+    immich = {
+      enable = true;
+      host = "0.0.0.0";
+      mediaLocation = "/tank9000/ds1/immich";
+    };
+
     netdata = {
       enable = true;
 
@@ -142,6 +168,19 @@
                   proxy_set_header Connection "upgrade";
                 '';
               };
+            };
+          });
+          "immich.jgray.me" = ( SSL // {
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:${toString config.services.immich.port}/";
+              proxyWebsockets = true;
+              recommendedProxySettings = true;
+              extraConfig = ''
+                client_max_body_size 50000M;
+                proxy_read_timeout   600s;
+                proxy_send_timeout   600s;
+                send_timeout         600s;
+              '';
             };
           });
           "ipod.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:14533/"; });
@@ -633,6 +672,11 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      "immich-server" = {
+        serviceConfig = {
+          PrivateDevices = lib.mkForce false;
+        };
+      };
       ipod = {
         enable = true;
         serviceConfig = {
@@ -1102,6 +1146,12 @@
         isSystemUser = true;
         uid = 33;
       };
+      immich = with pkgs; {
+        description = "immich";
+        group = "immich";
+        uid = 986;
+        extraGroups = [ "www-data" "video" "render" ];
+      };
     };
     groups = {
       homeassistant = { gid = 994; };
@@ -1110,6 +1160,7 @@
       "james.gray" = { };
       macos = { gid = 1005; };
       www-data = { gid = 33; };
+      immich = { gid = 980; };
     };
   };
 
