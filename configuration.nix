@@ -37,6 +37,7 @@
       ethtool
       exiftool
       ffmpeg
+      immich-go
       lm_sensors
       netdata
       nginx
