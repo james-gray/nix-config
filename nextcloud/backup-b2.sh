@@ -21,8 +21,8 @@ date +'%a %b %e %H:%M:%S %Z %Y'
 
 source /run/agenix/backup-b2-env
 export RCLONE_CONFIG_B2_TYPE=$RCLONE_CONFIG_B2_TYPE
-export RCLONE_CONFIG_B2_ACCOUNT=$RCLONE_CONFIG_B2_ACCOUNT
-export RCLONE_CONFIG_B2_KEY=$RCLONE_CONFIG_B2_KEY
+export RCLONE_CONFIG_B2_ACCOUNT=$NEXTCLOUD_RCLONE_CONFIG_B2_ACCOUNT
+export RCLONE_CONFIG_B2_KEY=$NEXTCLOUD_RCLONE_CONFIG_B2_KEY
 export RCLONE_FAST_LIST=1
 
 # Put NextCloud into maintenance mode.
@@ -43,7 +43,9 @@ rclone sync -Pvc --transfers 10 --exclude "*/cache/*" $NEXTCLOUD_DATA_DIR B2:$NE
 docker exec -u www-data nextcloud-aio-nextcloud php occ maintenance:mode --off
 
 # Sync Immich data to B2
-rclone sync -Pvc --transfers 10 $IMMICH_DATA_DIR B2:$IMMICH_B2_BUCKET/immich-data/
+export RCLONE_CONFIG_B2_KEY=$IMMICH_RCLONE_CONFIG_B2_KEY
+export RCLONE_CONFIG_B2_ACCOUNT=$IMMICH_RCLONE_CONFIG_B2_ACCOUNT
+rclone sync -Pvc --transfers 10 $IMMICH_DATA_DIR B2:$IMMICH_B2_BUCKET/
 
 date +'%a %b %e %H:%M:%S %Z %Y'
 echo 'Finished'
