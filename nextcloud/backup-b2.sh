@@ -7,7 +7,8 @@
 # BackBlaze B2 is an object storage service that is much less expensive than using Amazon S3 for the same purpose, with similar versioning and lifecycle management features.
 # Uploads are free, and storage costs only $0.005/GB/month compared to S3's $0.022/GB/month.
 
-DATA_DIR='/tank9000/ds1/nextcloud'
+NEXTCLOUD_DATA_DIR='/tank9000/ds1/nextcloud'
+IMMICH_DATA_DIR='/tank9000/ds1/immich'
 
 # Check if running as root
 if [ "$(id -u)" != "0" ]; then
@@ -36,10 +37,13 @@ rm /tmp/nextcloud.sql
 
 # Sync data to B2 in place, then disable maintenance mode
 # NextCloud will be unavailable during the sync. This will take a while if you added much data since your last backup.
-rclone sync -Pvc --transfers 10 --exclude "*/cache/*" $DATA_DIR B2:$NEXTCLOUD_B2_BUCKET/nextcloud-data/
+rclone sync -Pvc --transfers 10 --exclude "*/cache/*" $NEXTCLOUD_DATA_DIR B2:$NEXTCLOUD_B2_BUCKET/nextcloud-data/
 
 # Turn off maintenance mode
 docker exec -u www-data nextcloud-aio-nextcloud php occ maintenance:mode --off
+
+# Sync Immich data to B2
+rclone sync -Pvc --transfers 10 $IMMICH_DATA_DIR B2:$IMMICH_B2_BUCKET/immich-data/
 
 date +'%a %b %e %H:%M:%S %Z %Y'
 echo 'Finished'
