@@ -38,6 +38,7 @@
       exiftool
       ffmpeg
       immich-go
+      killall
       lm_sensors
       netdata
       nginx

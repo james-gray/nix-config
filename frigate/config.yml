@@ -65,12 +65,15 @@ cameras:
       enabled: true
       retain:
         days: 5
-      events:
+      alerts:
         retain:
-          default: 10
+          days: 10
+      detections:
+        retain:
+          days: 10
     motion:
       mask:
         - 0,1,0.384,1,0.366,0,0,0
         - 0.715,0.008,0.248,0.008,0.246,0.055,0.715,0.056
         - 0.828,0.552,0.82,0.66,0.996,0.693,0.998,0.553
-version: 0.14
+version: 0.15-1
