@@ -18,6 +18,7 @@ services:
     restart: unless-stopped
     volumes:
       - /tank9000/ds1/wordpress/wordpress:/var/www/html
+      - /tank9000/ds1/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     env_file:
       - /run/agenix/wordpress-env
     networks:
@@ -34,6 +35,7 @@ services:
     volumes:
       - /tank9000/ds1/wordpress/wordpress:/var/www/html
       - /tank9000/ds1/wordpress/nginx-conf:/etc/nginx/conf.d
+      - /tank9000/ds1/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
     networks:
       - wordpress-network
 
