@@ -107,6 +107,11 @@ sections:
     url: http://hal9000:8686
     icon: hl-lidarr
     statusCheck: false
+  - title: Music Assistant
+    description: Music Assistant media player manager. Must be on Tailnet to access.
+    url: http://hal9000:8095
+    icon: hl-music-assistant
+    statusCheck: false
 - name: Monitoring
   icon: fas fa-chart-line
   items:

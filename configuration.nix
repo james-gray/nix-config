@@ -752,6 +752,25 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      mass = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./mass/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./mass/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
       mealie = {
         enable = true;
         serviceConfig = {
