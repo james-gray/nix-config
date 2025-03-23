@@ -522,9 +522,9 @@
       enable = true;
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 1883 ];
+      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 1883 8095 8008 8009 ];
       allowedUDPPorts =
-        [ 22 2049 137 138 139 445 config.services.tailscale.port 1900 5350 5351 5353];
+        [ 22 2049 137 138 139 445 config.services.tailscale.port 1900 5350 5351 5353 8095 8097];
     };
     interfaces = {
       wlo1 = { wakeOnLan = { enable = true; }; };
