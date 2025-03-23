@@ -12,5 +12,6 @@ services:
           memory: 1000M
     volumes:
       - /tank9000/ds1/mealie/data:/app/data/
+      - /tank9000/ds1/mealie/nltk:/nltk_data/
     env_file:
       - /run/agenix/mealie-env
