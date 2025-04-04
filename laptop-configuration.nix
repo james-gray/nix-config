@@ -9,15 +9,25 @@
 
   environment = { systemPackages = with pkgs; [
     audacity
+    bless
+    direnv
+    feishin
     firefox
+    gcc
     gimp
+    hexdino
     jetbrains.idea-community
+    kcalc
     libreoffice
     meslo-lgs-nf
     reaper
+    rustup
     steam
+    spotify
     super-productivity
+    unrar-wrapper
     vlc
+    wirelesstools
   ]; };
 
   boot = {
@@ -68,6 +78,7 @@
       pulse = { enable = true; };
     };
     printing = { enable = true; };
+    tailscale = { enable = true; };
     xserver = {
       enable = true;
       displayManager = { lightdm = { enable = true; }; };
