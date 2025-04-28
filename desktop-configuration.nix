@@ -8,27 +8,32 @@
     ./common.nix
   ];
 
-  environment = { systemPackages = with pkgs; [
-    audacity
-    direnv
-    feishin
-    firefox
-    gcc
-    gimp
-    hexdino
-    jetbrains.idea-community
-    kcalc
-    libreoffice
-    meslo-lgs-nf
-    reaper
-    rustup
-    steam
-    spotify
-    super-productivity
-    unrar-wrapper
-    vlc
-    wirelesstools
-  ]; };
+  environment = {
+    systemPackages = with pkgs; [
+      audacity
+      direnv
+      feishin
+      firefox
+      gcc
+      gimp
+      hexdino
+      jetbrains.idea-community
+      kcalc
+      libreoffice
+      meslo-lgs-nf
+      reaper
+      rustup
+      steam
+      spotify
+      super-productivity
+      unrar-wrapper
+      vlc
+      wirelesstools
+    ];
+    shells = with pkgs; [
+      zsh
+    ];
+  };
 
   boot = {
     loader = {

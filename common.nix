@@ -58,7 +58,6 @@
     zsh = {
       enable = true;
       interactiveShellInit = ''
-        fastfetch
         export GIT_EDITOR="`which vim`"
         export EDITOR="`which vim`"
       '';
