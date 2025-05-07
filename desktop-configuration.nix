@@ -10,6 +10,7 @@
 
   environment = {
     systemPackages = with pkgs; [
+      openrgb-with-all-plugins
       audacity
       direnv
       feishin
@@ -29,6 +30,8 @@
       unrar-wrapper
       vlc
       wirelesstools
+      xorg.xinit
+      x11vnc
     ];
     shells = with pkgs; [
       zsh
@@ -37,17 +40,52 @@
 
   boot = {
     loader = {
-      systemd-boot = { configurationLimit = 1; };
-      efi = { efiSysMountPoint = "/boot"; };
+      #systemd-boot = { configurationLimit = 1; };
+      efi = {
+        efiSysMountPoint = "/boot";
+        canTouchEfiVariables = true;
+      };
+      grub = {
+        enable = true;
+        devices = [ "nodev" ];
+        efiSupport = true;
+        useOSProber = true;
+      };
     };
   };
 
-  hardware = { pulseaudio = { enable = false; }; };
+  hardware = {
+    graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
+    pulseaudio = {
+      enable = false;
+    };
+  };
 
   networking = {
-    hostName = "jgrtp";
+    hostName = "jgrnix";
     hostId = "876f1ee1";
-    networkmanager = { enable = true; };
+    firewall = {
+      enable = true;
+      allowPing = true;
+      trustedInterfaces = [ "tailscale0" ];
+      allowedTCPPorts = [ 22 3389 ];
+      allowedUDPPorts = [ 22 3389 ];
+    };
+    interfaces = {
+      wlo1 = { wakeOnLan = { enable = true; }; };
+    };
+    networkmanager = {
+      enable = true;
+      settings = {
+        connection = {
+          "ethernet.wake-on-lan" = "magic";
+          "wifi.wake-on-wlan" = "magic";
+        };
+      };
+    };
   };
 
   nix = {
@@ -85,8 +123,19 @@
       };
       pulse = { enable = true; };
     };
+    hardware = {
+      openrgb = { enable = true; };
+    };
     printing = { enable = true; };
     tailscale = { enable = true; };
+    openssh = {
+      enable = true;
+      settings = {
+        PasswordAuthentication = false;
+        UseDns = false;
+      };
+    };
+
     xserver = {
       enable = true;
       displayManager = { lightdm = { enable = true; }; };
@@ -94,6 +143,12 @@
         layout = "us";
         variant = "";
       };
+    };
+
+    xrdp = {
+      enable = true;
+      defaultWindowManager = "startplasma-x11";
+      openFirewall = true;
     };
   };
 
