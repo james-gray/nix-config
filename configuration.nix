@@ -40,6 +40,7 @@
       immich-go
       killall
       lm_sensors
+      meslo-lgs-nf
       netdata
       nginx
       rclone
