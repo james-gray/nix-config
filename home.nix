@@ -261,7 +261,7 @@
               enable = true;
               plugins = [ "git" "direnv" ];
               extraConfig = ''
-                if [ "$TMUX" = "" ]; then tmux; fi
+                fastfetch
               '';
             };
           };

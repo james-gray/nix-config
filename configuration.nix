@@ -20,6 +20,10 @@
       forceImportRoot = false;
       extraPools = [ "tank9000" "backup9000" ];
     };
+    loader = {
+      systemd-boot.enable = true;
+      efi.canTouchEfiVariables = true;
+    };
   };
 
   fileSystems = {
@@ -1154,6 +1158,7 @@
         description = "Syncoid User";
         extraGroups = [ "wheel" ];
         group = "syncoid";
+        isSystemUser = true;
         shell = bash;
       };
       timemachine = with pkgs; {
