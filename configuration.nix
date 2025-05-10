@@ -41,6 +41,7 @@
       ethtool
       exiftool
       ffmpeg
+      google-authenticator
       immich-go
       killall
       lm_sensors
@@ -112,7 +113,13 @@
     cockpit = {
       enable = true;
       port = 9090;
-      settings = { WebService = { AllowUnencrypted = true; }; };
+      settings = {
+        WebService = {
+          AllowUnencrypted = false;
+          Origins = "https://cockpit.jgray.me wss://cockpit.jgray.me";
+          ProtocolHeader = "X-Forwarded-Proto";
+        };
+      };
     };
     hardware = { openrgb.enable = true; };
 
@@ -164,6 +171,28 @@
           "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
           "bb.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:8100/"; });
           "christmas.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:32768/"; });
+          "cockpit.jgray.me" = ( SSL // {
+            locations = {
+              "/" = {
+                proxyPass = "http://127.0.0.1:9090/";
+                proxyWebsockets = true;
+                extraConfig = ''
+                  # Required to proxy the connection to Cockpit
+                  proxy_set_header Host $host;
+                  proxy_set_header X-Forwarded-Proto $scheme;
+
+                  # Required for web sockets to function
+                  proxy_buffering off;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+
+                  # Pass ETag header from Cockpit to clients.
+                  # See: https://github.com/cockpit-project/cockpit/issues/5239
+                  gzip off;
+                '';
+              };
+            };
+          });
           "hass.jgray.me" = ( SSL // {
             locations = {
               "/" = {
@@ -1189,6 +1218,18 @@
       macos = { gid = 1005; };
       www-data = { gid = 33; };
       immich = { gid = 980; };
+    };
+  };
+
+  security = {
+    pam = {
+      services = {
+        cockpit = {
+          googleAuthenticator = {
+            enable = true;
+          };
+        };
+      };
     };
   };
 
