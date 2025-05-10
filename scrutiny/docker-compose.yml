@@ -13,6 +13,7 @@ services:
       - /run/udev:/run/udev:ro
       - /home/jamesgray/code/nix-config/scrutiny/config:/opt/scrutiny/config
       - /home/jamesgray/code/nix-config/scrutiny/influxdb:/opt/scrutiny/influxdb
+      - /run/agenix/scrutiny-config:/opt/scrutiny/config/scrutiny.yaml
     devices:
       - "/dev/sda"
       - "/dev/sdb"

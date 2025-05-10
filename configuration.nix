@@ -83,6 +83,7 @@
       "music-env" = { file = ./secrets/music-env.age; };
       "vw-env" = { file = ./secrets/vw-env.age; };
       "wordpress-env" = { file = ./secrets/wordpress-env.age; };
+      "scrutiny-config" = { file = ./secrets/scrutiny-config.age; };
     };
   };
 
