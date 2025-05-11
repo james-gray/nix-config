@@ -112,6 +112,7 @@
     };
     cockpit = {
       enable = true;
+      openFirewall = true;
       port = 9090;
       settings = {
         WebService = {
@@ -1225,6 +1226,7 @@
     pam = {
       services = {
         cockpit = {
+          startSession = true;
           googleAuthenticator = {
             enable = true;
           };
