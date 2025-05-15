@@ -128,11 +128,11 @@ sections:
       target: newtab
       statusCheck: false
     - title: Cockpit
-      description: Server administration tool. Must be on Tailnet to access.
+      description: Server administration tool.
       icon: hl-cockpit
-      url: http://hal9000:9090
+      url: https://cockpit.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: Uptime Kuma
       description: Uptime monitoring. Must be on Tailnet to access.
       icon: hl-uptime-kuma
