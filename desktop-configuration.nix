@@ -3,6 +3,7 @@
 {
   imports = [
     <home-manager/nixos>
+    <agenix/modules/age.nix>
     ./desktop-hardware-configuration.nix
     ./home.nix
     ./common.nix
@@ -10,6 +11,7 @@
 
   environment = {
     systemPackages = with pkgs; [
+      (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       openrgb-with-all-plugins
       audacity
       direnv
@@ -36,6 +38,12 @@
     shells = with pkgs; [
       zsh
     ];
+  };
+
+  age = {
+    secrets = {
+      "wifi-password" = { file = ./secrets/wifi-password.age; };
+    };
   };
 
   boot = {
