@@ -101,15 +101,6 @@
     };
   };
 
-  sleep = {
-    extraConfig = ''
-      AllowSuspend=no
-      AllowHibernation=no
-      AllowHybridSleep=no
-      AllowSuspendThenHibernate=no
-    '';
-  };
-
 
   nix = {
     package = pkgs.nixVersions.stable;
@@ -158,7 +149,6 @@
         UseDns = false;
       };
     };
-
     xserver = {
       enable = true;
       displayManager = { lightdm = { enable = true; }; };
@@ -176,6 +166,15 @@
   };
 
   systemd = {
+    sleep = {
+      extraConfig = ''
+        AllowSuspend=no
+        AllowHibernation=no
+        AllowHybridSleep=no
+        AllowSuspendThenHibernate=no
+      '';
+    };
+
     services = {
       NetworkManager-wait-online = {
         enable = false;
