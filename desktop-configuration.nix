@@ -75,7 +75,7 @@
       allowedUDPPorts = [ 22 3389 ];
     };
     interfaces = {
-      wlo1 = { wakeOnLan = { enable = true; }; };
+      wlan0 = { wakeOnLan = { enable = true; }; };
     };
     networkmanager = {
       enable = true;
@@ -86,7 +86,30 @@
         };
       };
     };
+    wireless = {
+      iwd = {
+        enable = true;
+        settings = {
+          IPv6 = {
+            Enabled = true;
+          };
+          Settings = {
+            AutoConnect = true;
+          };
+        };
+      };
+    };
   };
+
+  sleep = {
+    extraConfig = ''
+      AllowSuspend=no
+      AllowHibernation=no
+      AllowHybridSleep=no
+      AllowSuspendThenHibernate=no
+    '';
+  };
+
 
   nix = {
     package = pkgs.nixVersions.stable;
@@ -149,6 +172,14 @@
       enable = true;
       defaultWindowManager = "startplasma-x11";
       openFirewall = true;
+    };
+  };
+
+  systemd = {
+    services = {
+      NetworkManager-wait-online = {
+        enable = false;
+      };
     };
   };
 
