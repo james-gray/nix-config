@@ -349,7 +349,7 @@
               ssl_prefer_server_ciphers on;
             '';
           });
-          "oi.jgray.me" = ( SSL // { locations."/".proxyPass = "http://192.168.1.219:3000/"; });
+          "oi.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:11111/"; });
           "vw.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
         };
     };
