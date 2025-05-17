@@ -360,6 +360,18 @@
     # TODO: See about reassigning client ips to tighten up the tailnet subnet mask
     nfs.server = { enable = true; };
 
+    open-webui = {
+      enable = true;
+      openFirewall = true;
+      host = "0.0.0.0";
+      port = 11111;
+      environment =
+        {
+          OLLAMA_API_BASE_URL = "http://192.168.1.219:11434";
+        }
+      ;
+    };
+
     openssh = {
       enable = true;
       settings = {
