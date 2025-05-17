@@ -80,32 +80,10 @@
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
       allowedTCPPorts = [ 22 3389 ];
-      allowedUDPPorts = [ 22 3389 ];
+      allowedUDPPorts = [ 22 3389 9 ];
     };
     interfaces = {
-      wlan0 = { wakeOnLan = { enable = true; }; };
-    };
-    networkmanager = {
-      enable = true;
-      settings = {
-        connection = {
-          "ethernet.wake-on-lan" = "magic";
-          "wifi.wake-on-wlan" = "magic";
-        };
-      };
-    };
-    wireless = {
-      iwd = {
-        enable = true;
-        settings = {
-          IPv6 = {
-            Enabled = true;
-          };
-          Settings = {
-            AutoConnect = true;
-          };
-        };
-      };
+      enp14s0 = { wakeOnLan = { enable = true; }; };
     };
   };
 
