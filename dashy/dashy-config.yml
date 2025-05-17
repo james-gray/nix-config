@@ -22,6 +22,11 @@ sections:
 - name: Apps
   icon: fab fa-app-store
   items:
+  - title: Open WebUI
+    description: Frontend for various local LLMs running in Ollama.
+    icon: hl-open-webui
+    url: https://oi.jgray.me/
+    statusCheck: true
   - title: Nextcloud
     description: Our own personal Google Drive.
     icon: hl-nextcloud
