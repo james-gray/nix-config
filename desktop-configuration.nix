@@ -21,7 +21,6 @@
       gimp
       hexdino
       jetbrains.idea-community
-      kcalc
       libreoffice
       meslo-lgs-nf
       reaper
@@ -139,7 +138,7 @@
         OLLAMA_ORIGINS = "*";
       };
       rocmOverrideGfx = "11.0.1";
-      loadModels = [ "mistral:7b" "deepseek-r1:14b" "llama3.1:8b" ];
+      loadModels = [ "mistral:7b" "deepseek-r1:14b" "llama3.1:8b" "gemma3:12b" "qwen3:14b" "llava:13b" "llava-phi3:3.8b" ];
     };
     openssh = {
       enable = true;
