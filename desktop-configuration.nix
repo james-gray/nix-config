@@ -79,8 +79,8 @@
       enable = true;
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 3389 ];
-      allowedUDPPorts = [ 22 3389 9 ];
+      allowedTCPPorts = [ 22 3389 3000 8080 ];
+      allowedUDPPorts = [ 22 3389 9 3000 8080 ];
     };
     interfaces = {
       enp14s0 = { wakeOnLan = { enable = true; }; };
@@ -164,6 +164,25 @@
     services = {
       NetworkManager-wait-online = {
         enable = false;
+      };
+      open-webui = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./open-webui/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./open-webui/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
       };
     };
   };
