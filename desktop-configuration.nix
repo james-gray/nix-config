@@ -79,8 +79,8 @@
       enable = true;
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 3389 3000 8080 ];
-      allowedUDPPorts = [ 22 3389 9 3000 8080 ];
+      allowedTCPPorts = [ 22 3389 3000 8080 11434 ];
+      allowedUDPPorts = [ 22 3389 9 3000 8080 11434 ];
     };
     interfaces = {
       enp14s0 = { wakeOnLan = { enable = true; }; };
@@ -128,6 +128,19 @@
     };
     printing = { enable = true; };
     tailscale = { enable = true; };
+    ollama = {
+      enable = true;
+      host = "0.0.0.0";
+      openFirewall = true;
+      acceleration = "rocm";
+      environmentVariables = {
+        HCC_AMDGPU_TARGET = "gfx1101";
+        OLLAMA_HOST = "0.0.0.0";
+        OLLAMA_ORIGINS = "*";
+      };
+      rocmOverrideGfx = "11.0.1";
+      loadModels = [ "mistral:7b" "deepseek-r1:14b" "llama3.1:8b" ];
+    };
     openssh = {
       enable = true;
       settings = {
