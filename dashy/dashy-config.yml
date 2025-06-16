@@ -158,16 +158,16 @@ sections:
       url: http://192.168.1.57:8080
       target: newtab
       statusCheck: false
-    - title: UniFi Network Application
-      description: UniFi Wi-Fi admin panel. James' MBP must be on Tailnet to access.
-      icon: hl-unifi
-      url: https://100.111.96.38:8443
-      target: newtab
-      statusCheck: false
-    - title: EdgeMax EdgeRouter-X SRP Interface
-      description: Router configuration admin interface. Must be on home network to access.
+    - title: UDM Network Application
+      description: UniFi Wi-Fi admin panel. Must be on home network to access.
       icon: hl-unifi
       url: https://192.168.1.1
+      target: newtab
+      statusCheck: false
+    - title: Mikrotik SwOS
+      desription: Microtik admin panel. Must be on home network to access.
+      icon: si-mikrotik
+      url: http://192.168.1.2
       target: newtab
       statusCheck: false
     - title: Shaw Gateway Interface
@@ -180,5 +180,11 @@ sections:
       description: MQTT management web interface. Must be on Tailnet to access.
       icon: hl-mqtt
       url: http://hal9000:58080
+      target: newtab
+      statusCheck: false
+    - title: CUPS
+      description: Print server. Must be on Tailnet to access.
+      icon: hl-cups
+      url: https://192.168.1.57:631
       target: newtab
       statusCheck: false
