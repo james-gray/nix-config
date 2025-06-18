@@ -170,12 +170,6 @@ sections:
       url: http://192.168.1.2
       target: newtab
       statusCheck: false
-    - title: Shaw Gateway Interface
-      description: Modem configuration admin interface. Must be on home network to access.
-      icon: fas fa-network-wired
-      url: https://10.0.0.1
-      target: newtab
-      statusCheck: false
     - title: Zigbee2MQTT
       description: MQTT management web interface. Must be on Tailnet to access.
       icon: hl-mqtt
