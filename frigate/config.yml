@@ -22,10 +22,10 @@ ffmpeg:
 go2rtc:
   streams:
     doorbell:
-      - ffmpeg:http://192.168.1.62/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
+      - ffmpeg:http://192.168.2.35/flv?port=1935&app=bcs&stream=channel0_main.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}#video=copy#audio=copy#audio=opus
     doorbell_sub:
-      - ffmpeg:http://192.168.1.62/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
-      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.1.62:544/h264Preview_01_sub
+      - ffmpeg:http://192.168.2.35/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
+      - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.2.35:544/h264Preview_01_sub
 
 cameras:
   doorbell:
