@@ -37,6 +37,7 @@
     systemPackages = with pkgs; [
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
+      busybox
       cockpit
       ethtool
       exiftool
