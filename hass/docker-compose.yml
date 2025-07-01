@@ -13,3 +13,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     network_mode: host
     image: ghcr.io/home-assistant/home-assistant:latest
+    ulimits:
+      nofile:
+        soft: "65536"
+        hard: "65536"
