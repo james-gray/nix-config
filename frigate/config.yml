@@ -26,8 +26,19 @@ go2rtc:
     doorbell_sub:
       - ffmpeg:http://192.168.2.35/flv?port=1935&app=bcs&stream=channel0_ext.bcs&user=admin&password={FRIGATE_RTSP_PASSWORD}
       - rtsp://admin:{FRIGATE_RTSP_PASSWORD}@192.168.2.35:544/h264Preview_01_sub
-
+    closet:
+      - rtspx://192.168.1.1:7441/Eg8kTOz9SmuUobZP
 cameras:
+  closet:
+    enabled: true
+    ffmpeg:
+      inputs:
+        - path: rtsp://127.0.0.1:8554/closet
+          input_args: preset-rtsp-restream
+          roles:
+            - record
+      output_args:
+        record: preset-record-ubiquiti
   doorbell:
     enabled: true
     ffmpeg:
