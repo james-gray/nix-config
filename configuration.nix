@@ -195,6 +195,7 @@
               };
             };
           });
+          "frigate.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5000/"; });
           "hass.jgray.me" = ( SSL // {
             locations = {
               "/" = {
