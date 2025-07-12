@@ -98,40 +98,50 @@ sections:
     icon: hl-navidrome
     statusCheck: true
   - title: Sonarr
-    description: TV Series Media Manager. Must be on Tailnet to access.
-    url: http://hal9000:8989
+    description: TV Series Media Manager.
+    url: https://sonarr.jgray.me
     icon: hl-sonarr
     statusCheck: false
   - title: Radarr
-    description: Movie Media Manager. Must be on Tailnet to access.
-    url: http://hal9000:7878
+    description: Movie Media Manager.
+    url: https://radarr.jgray.me
     icon: hl-radarr
     statusCheck: false
   - title: Lidarr
-    description: Music Media Manager. Must be on Tailnet to access.
-    url: http://hal9000:8686
+    description: Music Media Manager.
+    url: https://lidarr.jgray.me
     icon: hl-lidarr
     statusCheck: false
   - title: Music Assistant
-    description: Music Assistant media player manager. Must be on Tailnet to access.
-    url: http://hal9000:8095
+    description: Music Assistant media player manager.
+    url: https://musicassistant.jgray.me
     icon: hl-music-assistant
+    statusCheck: true
+  - title: Sabnzbd
+    description: Media downloader.
+    url: https://sabnzbd.jgray.me
+    icon: hl-sabnzbd
+    statusCheck: false
+  - title: Sabnzbd Music
+    description: Media downloader.
+    url: https://sabnzbdmusic.jgray.me
+    icon: hl-sabnzbd
     statusCheck: false
 - name: Monitoring
   icon: fas fa-chart-line
   items:
     - title: Netdata
-      description: System monitoring and information. Must be on Tailnet to access.
+      description: System monitoring and information.
       icon: hl-netdata
-      url: http://hal9000:19999
+      url: https://netdata.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: Scrutiny
-      description: Smart monitoring of system drives. Must be on Tailnet to access.
+      description: Smart monitoring of system drives.
       icon: hl-scrutiny
-      url: http://hal9000:38080
+      url: https://scrutiny.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: Cockpit
       description: Server administration tool.
       icon: hl-cockpit
@@ -139,16 +149,16 @@ sections:
       target: newtab
       statusCheck: true
     - title: Uptime Kuma
-      description: Uptime monitoring. Must be on Tailnet to access.
+      description: Uptime monitoring.
       icon: hl-uptime-kuma
-      url: http://hal9000:3001
+      url: https://uptimekuma.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: Portainer
-      description: Docker container manager. Must be on Tailnet to access.
+      description: Docker container manager.
       icon: hl-portainer
-      url: http://hal9000:9000
-      statusCheck: false
+      url: https://portainer.jgray.me
+      statusCheck: true
 - name: Network
   icon: fas fa-globe
   items:
