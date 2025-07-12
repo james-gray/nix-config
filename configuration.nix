@@ -165,6 +165,10 @@
           forceSSL = true;
           sslCertificate = "/tank9000/ds1/nginx/certs/cert.pem";
           sslCertificateKey = "/tank9000/ds1/nginx/certs/key.pem";
+        }; LETSENCRYPT_SSL = {
+          forceSSL = true;
+          sslCertificate = "/tank9000/ds1/nginx/certs/letsencrypt-cert.pem";
+          sslCertificateKey = "/tank9000/ds1/nginx/certs/letsencrypt-key.pem";
         }; in {
           "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
@@ -194,7 +198,7 @@
               };
             };
           });
-          "frigate.jgray.me" = ( SSL // {
+          "frigate.jgray.me" = ( LETSENCRYPT_SSL // {
             locations = {
               "/" = {
                 proxyPass = "http://127.0.0.1:5000/";
@@ -916,6 +920,17 @@
           /home/jamesgray/code/nix-config/nextcloud/backup-b2.sh
         '';
       };
+      letsencrypt-copy-certs = {
+        serviceConfig = {
+          User = "root";
+          Group = "root";
+          Type = "oneshot";
+        };
+        path = with pkgs; [ pkgs.openssh ];
+        script = ''
+          /home/jamesgray/code/nix-config/letsencrypt/copy-certs.sh
+        '';
+      };
       portainer = {
         enable = true;
         serviceConfig = {
@@ -1155,6 +1170,14 @@
       '';
     };
     timers = {
+      letsencrypt-copy-certs = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "letsencrypt-copy-certs.service" ];
+        timerConfig = {
+          OnCalendar = "*-*-* 02:00:00";
+          Unit = "letsencrypt-copy-certs.service";
+        };
+      };
       nextcloud-backup = {
         wantedBy = [ "timers.target" ];
         partOf = [ "nextcloud-backup.service" ];
