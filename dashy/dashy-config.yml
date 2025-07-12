@@ -70,10 +70,10 @@ sections:
     target: newtab
     statusCheck: true
   - title: Frigate
-    description: NVR/CCTV application. Must be on Tailnet to access.
-    url: http://hal9000:5000/
+    description: NVR/CCTV application.
+    url: https://frigate.jgray.me
     icon: hl-frigate
-    statusCheck: false
+    statusCheck: true
 - name: Media
   icon: fas fa-compact-disc
   items:
@@ -153,17 +153,17 @@ sections:
   icon: fas fa-globe
   items:
     - title: AdGuard Home
-      description: DNS-based adblock. Must be on home network to access.
+      description: DNS-based adblock.
       icon: hl-adguardhome
-      url: http://192.168.1.57:8080
+      url: https://adguard.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: UDM Network Application
-      description: UniFi Wi-Fi admin panel. Must be on home network to access.
+      description: UniFi Wi-Fi admin panel.
       icon: hl-unifi
-      url: https://192.168.1.1
+      url: https://unifi.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: Mikrotik SwOS
       desription: Microtik admin panel. Must be on home network to access.
       icon: si-mikrotik
@@ -171,14 +171,14 @@ sections:
       target: newtab
       statusCheck: false
     - title: Zigbee2MQTT
-      description: MQTT management web interface. Must be on Tailnet to access.
+      description: MQTT management web interface.
       icon: hl-mqtt
-      url: http://hal9000:58080
+      url: https://mqtt.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true
     - title: CUPS
-      description: Print server. Must be on Tailnet to access.
+      description: Print server.
       icon: hl-cups
-      url: https://192.168.1.57:631
+      url: https://cups.jgray.me
       target: newtab
-      statusCheck: false
+      statusCheck: true

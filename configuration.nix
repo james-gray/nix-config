@@ -170,13 +170,15 @@
           sslCertificate = "/tank9000/ds1/nginx/certs/letsencrypt-cert.pem";
           sslCertificateKey = "/tank9000/ds1/nginx/certs/letsencrypt-key.pem";
         }; in {
+          "adguard.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.57:8080"; });
           "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
+          "dashy.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:28080"; });
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
-          "actual.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
+          "actual.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
           "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
-          "bb.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:8100/"; });
+          "bb.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8100/"; });
           "christmas.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:32768/"; });
-          "cockpit.jgray.me" = ( SSL // {
+          "cockpit.jgray.me" = ( LETSENCRYPT_SSL // {
             locations = {
               "/" = {
                 proxyPass = "http://127.0.0.1:9090/";
@@ -301,9 +303,9 @@
               }
             '';
           });
-          "lubelogger.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
+          "lubelogger.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
           "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
-          "miniflux.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:280/"; });
+          "miniflux.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:280/"; });
           "music.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:24533/"; });
           "nextcloud.jgray.me" = ( SSL // {
             extraConfig = ''
@@ -361,8 +363,11 @@
               ssl_prefer_server_ciphers on;
             '';
           });
-          "oi.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:11111/"; });
-          "vw.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
+          "oi.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:11111/"; });
+          "vw.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
+          "swos.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.2/"; });
+          "mqtt.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:58080"; });
+          "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:631"; });
         };
     };
 
