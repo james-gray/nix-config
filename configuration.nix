@@ -379,7 +379,7 @@
       port = 11111;
       environment =
         {
-          OLLAMA_API_BASE_URL = "http://192.168.1.156:11434";
+          OLLAMA_API_BASE_URL = "http://192.168.1.219:11434";
         }
       ;
     };
