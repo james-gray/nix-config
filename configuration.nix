@@ -1175,6 +1175,15 @@
         requires = [ "docker.service" ];
         wantedBy = [ "default.target" ];
       };
+      zfs-prune-snapshots = {
+        serviceConfig = {
+          User = "root";
+          Group = "root";
+          Type = "oneshot";
+        };
+        path = with pkgs; [ pkgs.openssh ];
+        script = "zfs-prune-snapshots 1w";
+      };
     };
     # Disable sleep! Servers can sleep when they're dead!
     sleep = {
@@ -1224,6 +1233,14 @@
         timerConfig = {
           OnCalendar = "daily";
           Unit = "vaultwarden-backup.service";
+        };
+      };
+      zfs-prune-snapshots = {
+        wantedBy = [ "timers.target" ];
+        partOf = [ "zfs-prune-snapshots.service" ];
+        timerConfig = {
+          OnCalendar = "Sun *-*-* 03:00:00";
+          Unit = "zfs-prune-snapshots.service";
         };
       };
     };
