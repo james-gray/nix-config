@@ -237,6 +237,7 @@
               ncf = "cd ~/code/nix-config";
               open = "dolphin";
               rebuild = "sudo nixos-rebuild switch";
+              zlist = "sudo zfs list -r -o name,usedbydataset -S usedbydataset | grep tank9000";
             };
 
             history = {
