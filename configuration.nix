@@ -578,7 +578,7 @@
         "snapshot"
         "destroy"
       ];
-      commonArgs = [ "--no-privilege-elevation" "--recursive" ];
+      commonArgs = [ "--no-privilege-elevation" "--recursive" "--no-sync-snap" "--skip-parent" ];
       commands."tank9000" = {
         source = "tank9000/ds1";
         target = "backup9000/ds1";
