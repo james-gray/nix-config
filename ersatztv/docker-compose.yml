@@ -1,0 +1,17 @@
+---
+version: '3'
+services:
+  ersatztv:
+    container_name: ersatztv
+    environment:
+      - TZ=America/Vancouver
+    ports:
+      - '8409:8409'
+    devices:
+      - /dev/dri/renderD128:/dev/dri/renderD128
+    volumes:
+      - '/tank9000/ds1/ersatztv/config:/config'
+      - '/tank9000/ds1/ersatztv/transcode:/transcode'
+      - '/tank9000/ds1/jellyfin/media:/media:ro'
+    restart: unless-stopped
+    image: 'ghcr.io/ersatztv/ersatztv:latest'

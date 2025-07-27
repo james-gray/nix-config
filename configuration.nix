@@ -200,6 +200,7 @@
               };
             };
           });
+          "ersatztv.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.69:8409"; });
           "frigate.jgray.me" = ( LETSENCRYPT_SSL // {
             locations = {
               "/" = {
@@ -706,6 +707,24 @@
           ExecStop = ''
             ${pkgs.docker-compose}/bin/docker-compose -f ${
               ./dashy/docker-compose.yml
+            } stop
+          '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      ersatztv = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./ersatztv/docker-compose.yml
+            } up
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./ersatztv/docker-compose.yml
             } stop
           '';
         };
