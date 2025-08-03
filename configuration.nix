@@ -91,6 +91,13 @@
   # Service configuration
   services = {
     avahi = {
+      enable = true;
+      nssmdns4 = true;
+      openFirewall = true;
+      publish = {
+        enable = true;
+        userServices = true;
+      };
       extraServiceFiles = {
         smb = ''
           <?xml version="1.0" standalone='no'?><!--*-nxml-*-->
@@ -409,6 +416,28 @@
       };
     };
 
+    printing = {
+      enable = true;
+      drivers = [ pkgs.brlaser ];
+      openFirewall = true;
+      allowFrom = [ "all" ];
+      browsing = true;
+      defaultShared = true;
+      browsedConf = ''
+        BrowseDNSSDSubTypes _cups,_print
+        BrowseLocalProtocols all
+        BrowseRemoteProtocols all
+        CreateIPPPrinterQueues All
+        BrowseProtocols all
+      '';
+      listenAddresses = [ "*:631" ];
+      extraConf = ''
+        DefaultAuthType Basic
+        DefaultEncryption IfRequested
+        ServerAlias *
+      '';
+    };
+
     samba = {
       enable = true;
       settings = {
@@ -600,9 +629,9 @@
       enable = true;
       allowPing = true;
       trustedInterfaces = [ "tailscale0" ];
-      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 1883 8095 8008 8009 ];
+      allowedTCPPorts = [ 22 2049 137 138 139 445 80 443 1883 8095 8008 8009 631 ];
       allowedUDPPorts =
-        [ 22 2049 137 138 139 445 config.services.tailscale.port 1900 5350 5351 5353 8095 8097];
+        [ 22 2049 137 138 139 445 config.services.tailscale.port 1900 5350 5351 5353 8095 8097 631 ];
     };
     interfaces = {
       wlo1 = { wakeOnLan = { enable = true; }; };
