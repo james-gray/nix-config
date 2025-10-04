@@ -91,6 +91,33 @@
 
   # Service configuration
   services = {
+    adguardhome = {
+      enable = true;
+      openFirewall = true;
+      settings = {
+        dns = {
+          upstream_dns = [
+            "https://dns10.quad9.net/dns-query"
+          ];
+        };
+        filtering = {
+          protection_enabled = true;
+          filtering_enabled = true;
+          parental_enabled = false;  # Parental control-based DNS requests filtering.
+          safe_search = {
+            enabled = false;  # Enforcing "Safe search" option for search engines, when possible.
+          };
+        };
+        # The following notation uses map
+        # to not have to manually create {enabled = true; url = "";} for every filter
+        # This is, however, fully optional
+        filters = map(url: { enabled = true; url = url; }) [
+          "https://adguardteam.github.io/HostlistsRegistry/assets/filter_9.txt"  # The Big List of Hacked Malware Web Sites
+          "https://adguardteam.github.io/HostlistsRegistry/assets/filter_11.txt"  # malicious url blocklist
+        ];
+      };
+    };
+
     avahi = {
       enable = true;
       nssmdns4 = true;
@@ -178,7 +205,7 @@
           sslCertificate = "/tank9000/ds1/nginx/certs/letsencrypt-cert.pem";
           sslCertificateKey = "/tank9000/ds1/nginx/certs/letsencrypt-key.pem";
         }; in {
-          "adguard.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.57:8080"; });
+          "adguard.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:3000"; });
           "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
           "dashy.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:28080"; });
           "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
