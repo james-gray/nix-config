@@ -38,6 +38,7 @@
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
       cockpit
+      direnv
       ethtool
       exiftool
       ffmpeg
