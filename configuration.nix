@@ -403,7 +403,7 @@
           "vw.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
           "swos.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.2/"; });
           "mqtt.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:58080"; });
-          "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.57:631"; });
+          "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:631"; });
           "sonarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8989"; });
           "radarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7878"; });
           "lidarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8686"; });
