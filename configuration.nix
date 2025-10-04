@@ -152,7 +152,7 @@
       settings = {
         WebService = {
           AllowUnencrypted = false;
-          Origins = "https://cockpit.jgray.me wss://cockpit.jgray.me";
+          Origins = lib.mkForce "https://cockpit.jgray.me wss://cockpit.jgray.me";
           ProtocolHeader = "X-Forwarded-Proto";
         };
       };
