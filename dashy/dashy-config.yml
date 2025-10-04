@@ -130,12 +130,6 @@ sections:
 - name: Monitoring
   icon: fas fa-chart-line
   items:
-    - title: Netdata
-      description: System monitoring and information.
-      icon: hl-netdata
-      url: https://netdata.jgray.me
-      target: newtab
-      statusCheck: true
     - title: Scrutiny
       description: Smart monitoring of system drives.
       icon: hl-scrutiny
