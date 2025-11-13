@@ -425,7 +425,20 @@
               ssl_prefer_server_ciphers on;
             '';
           });
-          "oi.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:11111/"; });
+          "oi.jgray.me" = ( LETSENCRYPT_SSL // {
+            locations = {
+              "/" = {
+                proxyPass = "http://127.0.0.1:11111/";
+                proxyWebsockets = true;
+                extraConfig = ''
+                  # Required for web sockets to function
+                  proxy_buffering off;
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                '';
+              };
+            };
+          });
           "vw.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
           "swos.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.2/"; });
           "mqtt.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:58080"; });
@@ -458,6 +471,7 @@
       environment =
         {
           OLLAMA_API_BASE_URL = "http://192.168.1.156:11434";
+          ENABLE_WEBSOCKET_SUPPORT = "false";
         }
       ;
     };
