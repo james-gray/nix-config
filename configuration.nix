@@ -441,7 +441,22 @@
           });
           "vw.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
           "swos.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.2/"; });
-          "mqtt.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:58080"; });
+          "mqtt.jgray.me" = ( LETSENCRYPT_SSL // {
+            locations = {
+              "/" = {
+                proxyPass = "http://127.0.0.1:58080";
+              };
+              "/api" = {
+                proxyPass = "http://127.0.0.1:58080/api";
+                proxyWebsockets = true;
+                extraConfig = ''
+                  # Required for web sockets to function
+                  proxy_set_header Upgrade $http_upgrade;
+                  proxy_set_header Connection "upgrade";
+                '';
+              };
+            };
+          });
           "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:631"; });
           "sonarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8989"; });
           "radarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7878"; });
