@@ -169,15 +169,15 @@ sections:
       target: newtab
       statusCheck: true
     - title: Mikrotik SwOS
-      desription: Microtik admin panel. Must be on home network to access.
+      desription: Mikrotik admin panel. Must be on VPN to access.
       icon: si-mikrotik
       url: http://192.168.1.2
       target: newtab
       statusCheck: false
     - title: Zigbee2MQTT
-      description: MQTT management web interface.
+      description: MQTT management web interface. Must be on VPN to access.
       icon: hl-mqtt
-      url: https://mqtt.jgray.me
+      url: http://192.168.1.69:58080
       target: newtab
       statusCheck: true
     - title: CUPS
