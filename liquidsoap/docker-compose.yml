@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  liquidsoap:
+    container_name: liquidsoap
+    image: savonet/liquidsoap:v2.3.2
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/radio-env
+    volumes:
+      - /home/jamesgray/code/nix-config/liquidsoap/radio.liq:/etc/liquidsoap/radio.liq:ro
+    command: liquidsoap /etc/liquidsoap/radio.liq
+    depends_on:
+      - icecast
+
+  icecast:
+    container_name: icecast
+    image: moul/icecast
+    restart: unless-stopped
+    ports:
+      - "18000:8000"
+    env_file:
+      - /run/agenix/radio-env
+    volumes:
+      - /home/jamesgray/code/nix-config/liquidsoap/icecast.xml:/etc/icecast2/icecast.xml:ro

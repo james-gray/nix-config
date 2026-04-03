@@ -47,9 +47,11 @@
       immich-go
       killall
       lm_sensors
+      liquidsoap
       meslo-lgs-nf
       netdata
       nginx
+      nodejs_24
       rclone
       sanoid
       smartmontools
@@ -87,6 +89,7 @@
       "vw-env" = { file = ./secrets/vw-env.age; };
       "wordpress-env" = { file = ./secrets/wordpress-env.age; };
       "scrutiny-config" = { file = ./secrets/scrutiny-config.age; };
+      "radio-env" = { file = ./secrets/radio-env.age; };
     };
   };
 
@@ -460,6 +463,7 @@
           "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:631"; });
           "sonarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8989"; });
           "radarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7878"; });
+          "radio.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:18000"; });
           "lidarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8686"; });
           "sabnzbd.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7979"; });
           "sabnzbdmusic.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7777"; });
@@ -1127,6 +1131,25 @@
               ./radarr/docker-compose.yml
             } stop
           '';
+        };
+        after = [ "docker.service" ];
+        requires = [ "docker.service" ];
+        wantedBy = [ "default.target" ];
+      };
+      radio = {
+        enable = true;
+        serviceConfig = {
+          ExecStart = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./liquidsoap/docker-compose.yml
+            } up -d
+          '';
+          ExecStop = ''
+            ${pkgs.docker-compose}/bin/docker-compose -f ${
+              ./liquidsoap/docker-compose.yml
+            } stop
+          '';
+          RemainAfterExit = true;
         };
         after = [ "docker.service" ];
         requires = [ "docker.service" ];

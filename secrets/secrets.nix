@@ -28,4 +28,5 @@ in
   "wordpress-env.age".publicKeys = users ++ systems;
   "scrutiny-config.age".publicKeys = users ++ systems;
   "wifi-password.age".publicKeys = users ++ systems;
+  "radio-env.age".publicKeys = users ++ systems;
 }
