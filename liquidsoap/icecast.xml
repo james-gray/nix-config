@@ -3,8 +3,8 @@
   <admin>admin@jgray.me</admin>
 
   <limits>
-    <clients>10</clients>
-    <sources>1</sources>
+    <clients>30</clients>
+    <sources>3</sources>
     <queue-size>524288</queue-size>
     <client-timeout>30</client-timeout>
     <header-timeout>15</header-timeout>
@@ -26,9 +26,21 @@
   </listen-socket>
 
   <mount type="normal">
-    <mount-name>/stream</mount-name>
-    <stream-name>jgray radio</stream-name>
+    <mount-name>/music</mount-name>
+    <stream-name>Music Radio</stream-name>
     <stream-description>Random albums from music.jgray.me</stream-description>
+  </mount>
+
+  <mount type="normal">
+    <mount-name>/ipod</mount-name>
+    <stream-name>iPod Radio</stream-name>
+    <stream-description>Random tracks from ipod.jgray.me</stream-description>
+  </mount>
+
+  <mount type="normal">
+    <mount-name>/bandcamp</mount-name>
+    <stream-name>Bandcamp Radio</stream-name>
+    <stream-description>Random albums from bandcamp.jgray.me</stream-description>
   </mount>
 
   <paths>

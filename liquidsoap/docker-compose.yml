@@ -1,15 +1,42 @@
 version: "3"
 
 services:
-  liquidsoap:
-    container_name: liquidsoap
+  liquidsoap-music:
+    container_name: liquidsoap-music
     image: savonet/liquidsoap:v2.3.2
     restart: unless-stopped
     env_file:
       - /run/agenix/radio-env
     volumes:
-      - /home/jamesgray/code/nix-config/liquidsoap/radio.liq:/etc/liquidsoap/radio.liq:ro
-    command: liquidsoap /etc/liquidsoap/radio.liq
+      - /home/jamesgray/code/nix-config/liquidsoap/common.liq:/etc/liquidsoap/common.liq:ro
+      - /home/jamesgray/code/nix-config/liquidsoap/music.liq:/etc/liquidsoap/music.liq:ro
+    command: liquidsoap /etc/liquidsoap/music.liq
+    depends_on:
+      - icecast
+
+  liquidsoap-ipod:
+    container_name: liquidsoap-ipod
+    image: savonet/liquidsoap:v2.3.2
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/radio-env
+    volumes:
+      - /home/jamesgray/code/nix-config/liquidsoap/common.liq:/etc/liquidsoap/common.liq:ro
+      - /home/jamesgray/code/nix-config/liquidsoap/ipod.liq:/etc/liquidsoap/ipod.liq:ro
+    command: liquidsoap /etc/liquidsoap/ipod.liq
+    depends_on:
+      - icecast
+
+  liquidsoap-bandcamp:
+    container_name: liquidsoap-bandcamp
+    image: savonet/liquidsoap:v2.3.2
+    restart: unless-stopped
+    env_file:
+      - /run/agenix/radio-env
+    volumes:
+      - /home/jamesgray/code/nix-config/liquidsoap/common.liq:/etc/liquidsoap/common.liq:ro
+      - /home/jamesgray/code/nix-config/liquidsoap/bandcamp.liq:/etc/liquidsoap/bandcamp.liq:ro
+    command: liquidsoap /etc/liquidsoap/bandcamp.liq
     depends_on:
       - icecast
 
