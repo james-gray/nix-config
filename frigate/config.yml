@@ -63,19 +63,21 @@ cameras:
       enabled: true
     record:
       enabled: true
-      retain:
-        days: 5
       alerts:
         retain:
           days: 10
       detections:
         retain:
           days: 10
+      continuous:
+        days: 5
+      motion:
+        days: 0
     motion:
       mask:
         - 0,1,0.384,1,0.366,0,0,0
         - 0.715,0.008,0.248,0.008,0.246,0.055,0.715,0.056
         - 0.828,0.552,0.82,0.66,0.996,0.693,0.998,0.553
-version: 0.16-0
+version: 0.17-0
 detect:
   enabled: true
