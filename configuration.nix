@@ -1,5 +1,11 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Import docker-compose service helpers
+  dockerComposeHelpers = import ./modules/docker-compose-service.nix { inherit pkgs lib; };
+  inherit (dockerComposeHelpers) mkDockerComposeService mkDockerComposeServiceDetached mkDockerComposeServiceOneshot;
+in
+
 {
   imports = [
     # Include the results of the hardware scan.
@@ -457,328 +463,28 @@
   systemd = {
     services = {
       "NetworkManager-wait-online" = { enable = false; };
-      actual = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./actual/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./actual/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      bandcamp = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bandcamp/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bandcamp/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      bb = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bb/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bb/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      christmas-community = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./christmas-community/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./christmas-community/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      dashy = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./dashy/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./dashy/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      ersatztv = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ersatztv/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ersatztv/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      frigate = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./frigate/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./frigate/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      homeassistant = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./hass/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./hass/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      actual = mkDockerComposeService "actual" ./actual/docker-compose.yml;
+      bandcamp = mkDockerComposeServiceDetached "bandcamp" ./bandcamp/docker-compose.yml;
+      bb = mkDockerComposeServiceDetached "bb" ./bb/docker-compose.yml;
+      christmas-community = mkDockerComposeService "christmas-community" ./christmas-community/docker-compose.yml;
+      dashy = mkDockerComposeService "dashy" ./dashy/docker-compose.yml;
+      ersatztv = mkDockerComposeService "ersatztv" ./ersatztv/docker-compose.yml;
+      frigate = mkDockerComposeServiceDetached "frigate" ./frigate/docker-compose.yml;
+      homeassistant = mkDockerComposeServiceDetached "homeassistant" ./hass/docker-compose.yml;
       "immich-server" = {
         serviceConfig = {
           PrivateDevices = lib.mkForce false;
         };
       };
-      ipod = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ipod/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ipod/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      jellyfin = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./jellyfin/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./jellyfin/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      lidarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lidarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lidarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      lubelogger = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lubelogger/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lubelogger/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      mass = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mass/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mass/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      mealie = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mealie/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mealie/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      miniflux = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./miniflux/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./miniflux/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      music = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      nextcloud = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./nextcloud/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./nextcloud/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-          Type = "oneshot";
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      ipod = mkDockerComposeServiceDetached "ipod" ./ipod/docker-compose.yml;
+      jellyfin = mkDockerComposeService "jellyfin" ./jellyfin/docker-compose.yml;
+      lidarr = mkDockerComposeService "lidarr" ./lidarr/docker-compose.yml;
+      lubelogger = mkDockerComposeService "lubelogger" ./lubelogger/docker-compose.yml;
+      mass = mkDockerComposeServiceDetached "mass" ./mass/docker-compose.yml;
+      mealie = mkDockerComposeServiceDetached "mealie" ./mealie/docker-compose.yml;
+      miniflux = mkDockerComposeServiceDetached "miniflux" ./miniflux/docker-compose.yml;
+      music = mkDockerComposeServiceDetached "music" ./navidrome/docker-compose.yml;
+      nextcloud = mkDockerComposeServiceOneshot "nextcloud" ./nextcloud/docker-compose.yml;
       nextcloud-backup = {
         serviceConfig = {
           User = "root";
@@ -801,115 +507,12 @@
           /home/jamesgray/code/nix-config/letsencrypt/copy-certs.sh
         '';
       };
-      portainer = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./portainer/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./portainer/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      uptime-kuma = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./uptime-kuma/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./uptime-kuma/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      radarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./radarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./radarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      radio = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./liquidsoap/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./liquidsoap/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sabnzbd = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbd/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbd/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sabnzbdmusic = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbdmusic/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbdmusic/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      portainer = mkDockerComposeService "portainer" ./portainer/docker-compose.yml;
+      uptime-kuma = mkDockerComposeService "uptime-kuma" ./uptime-kuma/docker-compose.yml;
+      radarr = mkDockerComposeService "radarr" ./radarr/docker-compose.yml;
+      radio = mkDockerComposeServiceDetached "radio" ./liquidsoap/docker-compose.yml;
+      sabnzbd = mkDockerComposeService "sabnzbd" ./sabnzbd/docker-compose.yml;
+      sabnzbdmusic = mkDockerComposeService "sabnzbdmusic" ./sabnzbdmusic/docker-compose.yml;
       scrutiny-collector-metrics = {
         serviceConfig = {
           User = "root";
@@ -921,62 +524,9 @@
           docker exec scrutiny /opt/scrutiny/bin/scrutiny-collector-metrics run
         '';
       };
-      scrutiny = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./scrutiny/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./scrutiny/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sonarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sonarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sonarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      vaultwarden = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./vaultwarden/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./vaultwarden/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      scrutiny = mkDockerComposeServiceDetached "scrutiny" ./scrutiny/docker-compose.yml;
+      sonarr = mkDockerComposeService "sonarr" ./sonarr/docker-compose.yml;
+      vaultwarden = mkDockerComposeServiceDetached "vaultwarden" ./vaultwarden/docker-compose.yml;
       vaultwarden-backup = {
         enable = true;
         serviceConfig = {
@@ -991,63 +541,9 @@
           chown -R www-data:www-data /tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3
         '';
       };
-      watchtower = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./watchtower/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./watchtower/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      wordpress = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./wordpress/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./wordpress/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      zigbee2mqtt = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./z2mqtt/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./z2mqtt/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      watchtower = mkDockerComposeServiceDetached "watchtower" ./watchtower/docker-compose.yml;
+      wordpress = mkDockerComposeServiceDetached "wordpress" ./wordpress/docker-compose.yml;
+      zigbee2mqtt = mkDockerComposeServiceDetached "zigbee2mqtt" ./z2mqtt/docker-compose.yml;
       zfs-prune-snapshots = {
         serviceConfig = {
           User = "root";
