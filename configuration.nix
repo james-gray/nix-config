@@ -4,6 +4,10 @@ let
   # Import docker-compose service helpers
   dockerComposeHelpers = import ./modules/docker-compose-service.nix { inherit pkgs lib; };
   inherit (dockerComposeHelpers) mkDockerComposeService mkDockerComposeServiceDetached mkDockerComposeServiceOneshot;
+
+  # Import samba share helpers
+  sambaHelpers = import ./modules/samba-share.nix { inherit lib; };
+  inherit (sambaHelpers) mkSambaShare mkTimeMachineShare;
 in
 
 {
@@ -300,80 +304,21 @@ in
           "fruit:wipe_intentionally_left_blank_rfork" = "yes";
           "spotlight" = "no";
         };
-        "share" = {
+        "share" = mkSambaShare {
           path = "/tank9000/ds1/share";
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "navidrome" = {
+        "navidrome" = mkSambaShare {
           path = "/tank9000/ds1/navidrome";
-
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "jellyfin" = {
+        "jellyfin" = mkSambaShare {
           path = "/tank9000/ds1/jellyfin";
-
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "Time Capsule" = {
+        "Time Capsule" = mkTimeMachineShare {
           path = "/tank9000/timemachine";
-          browseable = "yes";
-          "read only" = "no";
-          "inherit acls" = "yes";
-
-          "fruit:time machine" = "yes";
-          "fruit:time machine max size" = "512G";
-          "write list" = "timemachine";
-          "create mask" = "0600";
-          "directory mask" = "0700";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "timemachine";
-          "valid users" = "timemachine";
+          user = "timemachine";
         };
       };
     };
