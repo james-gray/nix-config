@@ -1,5 +1,15 @@
 { config, pkgs, lib, ... }:
 
+let
+  # Import docker-compose service helpers
+  dockerComposeHelpers = import ./modules/docker-compose-service.nix { inherit pkgs lib; };
+  inherit (dockerComposeHelpers) mkDockerComposeService mkDockerComposeServiceDetached mkDockerComposeServiceOneshot;
+
+  # Import samba share helpers
+  sambaHelpers = import ./modules/samba-share.nix { inherit lib; };
+  inherit (sambaHelpers) mkSambaShare mkTimeMachineShare;
+in
+
 {
   imports = [
     # Include the results of the hardware scan.
@@ -11,6 +21,7 @@
     # Custom modules
     ./home.nix
     ./common.nix
+    ./modules/nginx.nix
   ];
 
   # Boot configuration
@@ -39,7 +50,6 @@
       beep
       cockpit
       claude-code
-      direnv
       ethtool
       exiftool
       ffmpeg
@@ -194,289 +204,6 @@
       };
     };
 
-    nginx = {
-      enable = true;
-      sslDhparam = "/tank9000/ds1/nginx/certs/dhparams.pem";
-      recommendedProxySettings = true;
-      recommendedTlsSettings = true;
-      virtualHosts = let
-        SSL = {
-          forceSSL = true;
-          sslCertificate = "/tank9000/ds1/nginx/certs/cert.pem";
-          sslCertificateKey = "/tank9000/ds1/nginx/certs/key.pem";
-        }; LETSENCRYPT_SSL = {
-          forceSSL = true;
-          sslCertificate = "/tank9000/ds1/nginx/certs/letsencrypt-cert.pem";
-          sslCertificateKey = "/tank9000/ds1/nginx/certs/letsencrypt-key.pem";
-        }; in {
-          "adguard.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:3000"; });
-          "jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
-          "dashy.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:28080"; });
-          "www.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:380/"; });
-          "actual.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:5006/"; });
-          "bandcamp.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:4533/"; });
-          "bb.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8100/"; });
-          "christmas.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:32768/"; });
-          "cockpit.jgray.me" = ( LETSENCRYPT_SSL // {
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:9090/";
-                proxyWebsockets = true;
-                extraConfig = ''
-                  # Required to proxy the connection to Cockpit
-                  proxy_set_header Host $host;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-
-                  # Required for web sockets to function
-                  proxy_buffering off;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection "upgrade";
-
-                  # Pass ETag header from Cockpit to clients.
-                  # See: https://github.com/cockpit-project/cockpit/issues/5239
-                  gzip off;
-                '';
-              };
-            };
-          });
-          "ersatztv.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.69:8409"; });
-          "frigate.jgray.me" = ( LETSENCRYPT_SSL // {
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:5000/";
-                proxyWebsockets = true;
-              };
-            };
-          });
-          "hass.jgray.me" = ( SSL // {
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:8123/";
-                proxyWebsockets = true;
-                extraConfig = ''
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection "upgrade";
-                '';
-              };
-            };
-          });
-          "immich.jgray.me" = ( SSL // {
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString config.services.immich.port}/";
-              proxyWebsockets = true;
-              recommendedProxySettings = true;
-              extraConfig = ''
-                client_max_body_size 50000M;
-                proxy_read_timeout   600s;
-                proxy_send_timeout   600s;
-                send_timeout         600s;
-
-                # Required for web sockets to function
-                proxy_buffering off;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection "upgrade";
-
-              '';
-            };
-          });
-          "immich-local.jgray.me" = ( LETSENCRYPT_SSL // {
-            locations."/" = {
-              proxyPass = "http://127.0.0.1:${toString config.services.immich.port}/";
-              proxyWebsockets = true;
-              recommendedProxySettings = true;
-              extraConfig = ''
-                client_max_body_size 50000M;
-                proxy_read_timeout   600s;
-                proxy_send_timeout   600s;
-                send_timeout         600s;
-
-                # Required for web sockets to function
-                proxy_buffering off;
-                proxy_set_header Upgrade $http_upgrade;
-                proxy_set_header Connection "upgrade";
-
-              '';
-            };
-          });
-
-          "ipod.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:14533/"; });
-          "jellyfin.jgray.me" = ( SSL // {
-            extraConfig = ''
-              if ($scheme = "http") {
-                  return 301 https://$host$request_uri;
-              }
-
-              ## The default `client_max_body_size` is 1M, this might not be enough for some posters, etc.
-              client_max_body_size 20M;
-
-              ssl_session_timeout 1d;
-              ssl_session_cache shared:MozSSL:10m; # about 40000 sessions
-              ssl_session_tickets off;
-
-              ssl_protocols TLSv1.2 TLSv1.3;
-              ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305;
-              ssl_prefer_server_ciphers on;
-              set $jellyfin 127.0.0.1;
-
-              add_header Strict-Transport-Security "max-age=3153600" always;
-              #add_header X-Frame-Options "SAMEORIGIN";
-              #add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
-              #add_header X-Content-Type-Options "nosniff";
-
-              add_header Cross-Origin-Opener-Policy "same-origin" always;
-              add_header Cross-Origin-Embedder-Policy "require-corp" always;
-              add_header Cross-Origin-Resource-Policy "same-origin" always;
-
-              location / {
-                  proxy_pass http://$jellyfin:8096;
-
-                  proxy_set_header Host $host;
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-                  proxy_set_header X-Forwarded-Protocol $scheme;
-                  proxy_set_header X-Forwarded-Host $http_host;
-
-                  # Disable buffering when the nginx proxy gets very resource heavy upon streaming
-                  proxy_buffering off;
-              }
-
-              location = /web/ {
-                  # Proxy main Jellyfin traffic
-                  proxy_pass http://$jellyfin:8096/web/index.html;
-                  proxy_set_header Host $host;
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-                  proxy_set_header X-Forwarded-Protocol $scheme;
-                  proxy_set_header X-Forwarded-Host $http_host;
-              }
-
-              location /socket {
-                  # Proxy Jellyfin Websockets traffic
-                  proxy_pass http://$jellyfin:8096;
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection "upgrade";
-                  proxy_set_header Host $host;
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-                  proxy_set_header X-Forwarded-Protocol $scheme;
-                  proxy_set_header X-Forwarded-Host $http_host;
-              }
-            '';
-          });
-          "lubelogger.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:48080/"; });
-          "mealie.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:9925/"; });
-          "miniflux.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:280/"; });
-          "music.jgray.me" = ( SSL // { locations."/".proxyPass = "http://127.0.0.1:24533/"; });
-          "nextcloud.jgray.me" = ( SSL // {
-            extraConfig = ''
-              if ($scheme = "http") {
-                  return 301 https://$host$request_uri;
-              }
-
-              location / {
-                  proxy_pass http://127.0.0.1:11000$request_uri;
-
-                  proxy_buffering off;
-                  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-                  proxy_set_header X-Forwarded-Port $server_port;
-                  proxy_set_header X-Forwarded-Scheme $scheme;
-                  proxy_set_header X-Forwarded-Proto $scheme;
-                  proxy_set_header X-Real-IP $remote_addr;
-                  proxy_set_header Accept-Encoding "";
-                  proxy_set_header Host $host;
-
-                  client_body_buffer_size 512k;
-                  proxy_read_timeout 86400s;
-                  client_max_body_size 0;
-
-                  # Websocket
-                  proxy_http_version 1.1;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection $connection_upgrade;
-              }
-
-              # Make a regex exception for `/.well-known` so that clients can still
-              # access it despite the existence of the regex rule
-              # `location ~ /(\.|autotest|...)` which would otherwise handle requests
-              # for `/.well-known`.
-              location ^~ /.well-known {
-                  # The rules in this block are an adaptation of the rules
-                  # in `.htaccess` that concern `/.well-known`.
-
-                  location = /.well-known/carddav { return 301 /remote.php/dav/; }
-                  location = /.well-known/caldav  { return 301 /remote.php/dav/; }
-
-                  location /.well-known/acme-challenge    { try_files $uri $uri/ =404; }
-                  location /.well-known/pki-validation    { try_files $uri $uri/ =404; }
-
-                  # Let Nextcloud's API for `/.well-known` URIs handle all other
-                  # requests by passing them to the front-end controller.
-                  return 301 /index.php$request_uri;
-              }
-
-              ssl_session_timeout 1d;
-              ssl_session_cache shared:MozSSL:10m; # about 40000 sessions
-              ssl_session_tickets off;
-
-              ssl_protocols TLSv1.2 TLSv1.3;
-              ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-CHACHA20-POLY1305;
-              ssl_prefer_server_ciphers on;
-            '';
-          });
-          "oi.jgray.me" = ( LETSENCRYPT_SSL // {
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:11111/";
-                proxyWebsockets = true;
-                extraConfig = ''
-                  # Required for web sockets to function
-                  proxy_buffering off;
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection "upgrade";
-                '';
-              };
-            };
-          });
-          "vw.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:180/"; });
-          "swos.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.2/"; });
-          "mqtt.jgray.me" = ( LETSENCRYPT_SSL // {
-            locations = {
-              "/" = {
-                proxyPass = "http://127.0.0.1:58080";
-              };
-              "/api" = {
-                proxyPass = "http://127.0.0.1:58080/api";
-                proxyWebsockets = true;
-                extraConfig = ''
-                  # Required for web sockets to function
-                  proxy_set_header Upgrade $http_upgrade;
-                  proxy_set_header Connection "upgrade";
-                '';
-              };
-            };
-          });
-          "cups.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:631"; });
-          "sonarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8989"; });
-          "radarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7878"; });
-          "radio.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:18000/music"; });
-          "radio-ipod.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:18000/ipod"; });
-          "radio-bandcamp.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:18000/bandcamp"; });
-          "lidarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8686"; });
-          "sabnzbd.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7979"; });
-          "sabnzbdmusic.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7777"; });
-          "musicassistant.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8095"; });
-          #"netdata.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:19999"; });
-          "scrutiny.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:38080"; });
-          "uptimekuma.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:3001"; });
-          "portainer.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:9000"; });
-          "unifi.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.1"; });
-        };
-    };
 
     # Note that to enable macos mounts of ZFS datasets over NFS within a Tailscale tailnet, must set as follows (e.g. for dataset tank9000/example):
     # $ sudo zfs set sharenfs="rw=100.0.0.0/8,all_squash,anonuid=1000,anongid=100,insecure" tank9000/example
@@ -577,80 +304,21 @@
           "fruit:wipe_intentionally_left_blank_rfork" = "yes";
           "spotlight" = "no";
         };
-        "share" = {
+        "share" = mkSambaShare {
           path = "/tank9000/ds1/share";
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "navidrome" = {
+        "navidrome" = mkSambaShare {
           path = "/tank9000/ds1/navidrome";
-
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "jellyfin" = {
+        "jellyfin" = mkSambaShare {
           path = "/tank9000/ds1/jellyfin";
-
-          browseable = "yes";
-          "read only" = "no";
-          "writeable" = "yes";
-          "inherit acls" = "yes";
-
-          "write list" = "james.gray";
-          "create mask" = "0644";
-          "directory mask" = "0755";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "james.gray";
-          "valid users" = "james.gray";
+          user = "james.gray";
         };
-        "Time Capsule" = {
+        "Time Capsule" = mkTimeMachineShare {
           path = "/tank9000/timemachine";
-          browseable = "yes";
-          "read only" = "no";
-          "inherit acls" = "yes";
-
-          "fruit:time machine" = "yes";
-          "fruit:time machine max size" = "512G";
-          "write list" = "timemachine";
-          "create mask" = "0600";
-          "directory mask" = "0700";
-          "case sensitive" = "true";
-          "default case" = "lower";
-          "preserve case" = "yes";
-          "short preserve case" = "yes";
-
-          "force user" = "timemachine";
-          "valid users" = "timemachine";
+          user = "timemachine";
         };
       };
     };
@@ -740,328 +408,28 @@
   systemd = {
     services = {
       "NetworkManager-wait-online" = { enable = false; };
-      actual = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./actual/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./actual/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      bandcamp = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bandcamp/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bandcamp/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      bb = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bb/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./bb/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      christmas-community = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./christmas-community/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./christmas-community/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      dashy = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./dashy/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./dashy/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      ersatztv = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ersatztv/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ersatztv/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      frigate = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./frigate/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./frigate/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      homeassistant = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./hass/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./hass/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      actual = mkDockerComposeService "actual" ./actual/docker-compose.yml;
+      bandcamp = mkDockerComposeServiceDetached "bandcamp" ./bandcamp/docker-compose.yml;
+      bb = mkDockerComposeServiceDetached "bb" ./bb/docker-compose.yml;
+      christmas-community = mkDockerComposeService "christmas-community" ./christmas-community/docker-compose.yml;
+      dashy = mkDockerComposeService "dashy" ./dashy/docker-compose.yml;
+      ersatztv = mkDockerComposeService "ersatztv" ./ersatztv/docker-compose.yml;
+      frigate = mkDockerComposeServiceDetached "frigate" ./frigate/docker-compose.yml;
+      homeassistant = mkDockerComposeServiceDetached "homeassistant" ./hass/docker-compose.yml;
       "immich-server" = {
         serviceConfig = {
           PrivateDevices = lib.mkForce false;
         };
       };
-      ipod = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ipod/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./ipod/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      jellyfin = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./jellyfin/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./jellyfin/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      lidarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lidarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lidarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      lubelogger = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lubelogger/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./lubelogger/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      mass = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mass/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mass/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      mealie = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mealie/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./mealie/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      miniflux = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./miniflux/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./miniflux/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      music = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./navidrome/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      nextcloud = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./nextcloud/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./nextcloud/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-          Type = "oneshot";
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      ipod = mkDockerComposeServiceDetached "ipod" ./ipod/docker-compose.yml;
+      jellyfin = mkDockerComposeService "jellyfin" ./jellyfin/docker-compose.yml;
+      lidarr = mkDockerComposeService "lidarr" ./lidarr/docker-compose.yml;
+      lubelogger = mkDockerComposeService "lubelogger" ./lubelogger/docker-compose.yml;
+      mass = mkDockerComposeServiceDetached "mass" ./mass/docker-compose.yml;
+      mealie = mkDockerComposeServiceDetached "mealie" ./mealie/docker-compose.yml;
+      miniflux = mkDockerComposeServiceDetached "miniflux" ./miniflux/docker-compose.yml;
+      music = mkDockerComposeServiceDetached "music" ./navidrome/docker-compose.yml;
+      nextcloud = mkDockerComposeServiceOneshot "nextcloud" ./nextcloud/docker-compose.yml;
       nextcloud-backup = {
         serviceConfig = {
           User = "root";
@@ -1084,115 +452,12 @@
           /home/jamesgray/code/nix-config/letsencrypt/copy-certs.sh
         '';
       };
-      portainer = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./portainer/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./portainer/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      uptime-kuma = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./uptime-kuma/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./uptime-kuma/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      radarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./radarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./radarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      radio = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./liquidsoap/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./liquidsoap/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sabnzbd = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbd/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbd/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sabnzbdmusic = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbdmusic/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sabnzbdmusic/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      portainer = mkDockerComposeService "portainer" ./portainer/docker-compose.yml;
+      uptime-kuma = mkDockerComposeService "uptime-kuma" ./uptime-kuma/docker-compose.yml;
+      radarr = mkDockerComposeService "radarr" ./radarr/docker-compose.yml;
+      radio = mkDockerComposeServiceDetached "radio" ./liquidsoap/docker-compose.yml;
+      sabnzbd = mkDockerComposeService "sabnzbd" ./sabnzbd/docker-compose.yml;
+      sabnzbdmusic = mkDockerComposeService "sabnzbdmusic" ./sabnzbdmusic/docker-compose.yml;
       scrutiny-collector-metrics = {
         serviceConfig = {
           User = "root";
@@ -1204,62 +469,9 @@
           docker exec scrutiny /opt/scrutiny/bin/scrutiny-collector-metrics run
         '';
       };
-      scrutiny = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./scrutiny/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./scrutiny/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      sonarr = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sonarr/docker-compose.yml
-            } up
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./sonarr/docker-compose.yml
-            } stop
-          '';
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      vaultwarden = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./vaultwarden/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./vaultwarden/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      scrutiny = mkDockerComposeServiceDetached "scrutiny" ./scrutiny/docker-compose.yml;
+      sonarr = mkDockerComposeService "sonarr" ./sonarr/docker-compose.yml;
+      vaultwarden = mkDockerComposeServiceDetached "vaultwarden" ./vaultwarden/docker-compose.yml;
       vaultwarden-backup = {
         enable = true;
         serviceConfig = {
@@ -1274,63 +486,9 @@
           chown -R www-data:www-data /tank9000/ds1/nextcloud/admin/files/Backup/vaultwarden/db-$DATE.sqlite3
         '';
       };
-      watchtower = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./watchtower/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./watchtower/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      wordpress = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./wordpress/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./wordpress/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
-      zigbee2mqtt = {
-        enable = true;
-        serviceConfig = {
-          ExecStart = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./z2mqtt/docker-compose.yml
-            } up -d
-          '';
-          ExecStop = ''
-            ${pkgs.docker-compose}/bin/docker-compose -f ${
-              ./z2mqtt/docker-compose.yml
-            } stop
-          '';
-          RemainAfterExit = true;
-        };
-        after = [ "docker.service" ];
-        requires = [ "docker.service" ];
-        wantedBy = [ "default.target" ];
-      };
+      watchtower = mkDockerComposeServiceDetached "watchtower" ./watchtower/docker-compose.yml;
+      wordpress = mkDockerComposeServiceDetached "wordpress" ./wordpress/docker-compose.yml;
+      zigbee2mqtt = mkDockerComposeServiceDetached "zigbee2mqtt" ./z2mqtt/docker-compose.yml;
       zfs-prune-snapshots = {
         serviceConfig = {
           User = "root";
