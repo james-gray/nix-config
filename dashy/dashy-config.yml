@@ -112,11 +112,6 @@ sections:
     url: https://lidarr.jgray.me
     icon: hl-lidarr
     statusCheck: false
-  - title: Music Assistant
-    description: Music Assistant media player manager.
-    url: https://musicassistant.jgray.me
-    icon: hl-music-assistant
-    statusCheck: true
   - title: Sabnzbd
     description: Media downloader.
     url: https://sabnzbd.jgray.me
