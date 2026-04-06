@@ -49,7 +49,7 @@ in
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
       cockpit
-      claude-code
+      # claude-code  # Disabled: version 2.1.88 not available on npm registry (404)
       ethtool
       exiftool
       ffmpeg
