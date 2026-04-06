@@ -59,8 +59,6 @@
         };
       });
 
-      "ersatztv.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://192.168.1.69:8409"; });
-
       "frigate.jgray.me" = ( LETSENCRYPT_SSL // {
         locations = {
           "/" = {
@@ -300,7 +298,6 @@
       "lidarr.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8686"; });
       "sabnzbd.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7979"; });
       "sabnzbdmusic.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:7777"; });
-      "musicassistant.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:8095"; });
       #"netdata.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:19999"; });
       "scrutiny.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:38080"; });
       "uptimekuma.jgray.me" = ( LETSENCRYPT_SSL // { locations."/".proxyPass = "http://127.0.0.1:3001"; });

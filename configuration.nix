@@ -413,7 +413,6 @@ in
       bb = mkDockerComposeServiceDetached "bb" ./bb/docker-compose.yml;
       christmas-community = mkDockerComposeService "christmas-community" ./christmas-community/docker-compose.yml;
       dashy = mkDockerComposeService "dashy" ./dashy/docker-compose.yml;
-      ersatztv = mkDockerComposeService "ersatztv" ./ersatztv/docker-compose.yml;
       frigate = mkDockerComposeServiceDetached "frigate" ./frigate/docker-compose.yml;
       homeassistant = mkDockerComposeServiceDetached "homeassistant" ./hass/docker-compose.yml;
       "immich-server" = {
@@ -500,13 +499,11 @@ in
       };
     };
     # Disable sleep! Servers can sleep when they're dead!
-    sleep = {
-      extraConfig = ''
-        AllowSuspend=no
-        AllowHibernation=no
-        AllowHybridSleep=no
-        AllowSuspendThenHibernate=no
-      '';
+    sleep.settings.Sleep = {
+      AllowSuspend = "no";
+      AllowHibernation = "no";
+      AllowHybridSleep = "no";
+      AllowSuspendThenHibernate = "no";
     };
     timers = {
       letsencrypt-copy-certs = {
