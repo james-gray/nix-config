@@ -27,6 +27,10 @@ in
   # Boot configuration
   boot = {
     supportedFilesystems = [ "zfs" ];
+    # protect against the copyfail exploit by blacklisting affected kernel modules
+    blacklistedKernelModules = [ "af_alg" "algif_hash" "algif_skcipher" "algif_rng" "algif_aead" ];
+    extraModprobeConfig = "install algif_aead /bin/false";
+    #kernelPackages = pkgs.linuxPackages_6_18;
     zfs = {
       forceImportRoot = false;
       extraPools = [ "tank9000" "backup9000" ];
@@ -35,25 +39,32 @@ in
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
-  };
-
-  fileSystems = {
-    "/media/immich/archive" = {
-      device = "/tank9000/ds1/nextcloud/admin/files/Photos";
-      options = [ "bind" "nofail" ];
+    kernel.sysctl = {
+      # accept_ra=2 needed because IPv6 forwarding is on (docker); keeps
+      # Thread BR route advertisements refreshed for Matter-over-Thread.
+      "net.ipv6.conf.all.accept_ra" = 2;
+      "net.ipv6.conf.enp1s0d1.accept_ra" = 2;
     };
   };
+
+  #fileSystems = {
+  #  "/media/immich/archive" = {
+  #    device = "/tank9000/ds1/nextcloud/admin/files/Photos";
+  #    options = [ "bind" "nofail" ];
+  #  };
+  #};
 
   environment = {
     systemPackages = with pkgs; [
       (pkgs.callPackage <agenix/pkgs/agenix.nix> { }) # Agenix CLI
       beep
       cockpit
-      # claude-code  # Disabled: version 2.1.88 not available on npm registry (404)
+      claude-code  # Disabled: version 2.1.88 not available on npm registry (404)
       ethtool
       exiftool
       ffmpeg
       google-authenticator
+      happy-coder
       immich-go
       killall
       lm_sensors
@@ -81,6 +92,10 @@ in
         intel-media-driver # For Broadwell (2014) or newer processors. LIBVA_DRIVER_NAME=iHD
         intel-vaapi-driver # For older processors. LIBVA_DRIVER_NAME=i965
       ];
+    };
+    bluetooth = {
+      enable = true;
+      powerOnBoot = true;
     };
   };
 
@@ -308,6 +323,10 @@ in
           path = "/tank9000/ds1/share";
           user = "james.gray";
         };
+        "jasmine" = mkSambaShare {
+          path = "/tank9000/ds1/share/jasminegray";
+          user = "jasminegray";
+        };
         "navidrome" = mkSambaShare {
           path = "/tank9000/ds1/navidrome";
           user = "james.gray";
@@ -425,6 +444,7 @@ in
       lidarr = mkDockerComposeService "lidarr" ./lidarr/docker-compose.yml;
       lubelogger = mkDockerComposeService "lubelogger" ./lubelogger/docker-compose.yml;
       mass = mkDockerComposeServiceDetached "mass" ./mass/docker-compose.yml;
+      matter-server = mkDockerComposeServiceDetached "matter-server" ./matter/docker-compose.yml;
       mealie = mkDockerComposeServiceDetached "mealie" ./mealie/docker-compose.yml;
       miniflux = mkDockerComposeServiceDetached "miniflux" ./miniflux/docker-compose.yml;
       music = mkDockerComposeServiceDetached "music" ./navidrome/docker-compose.yml;
@@ -573,6 +593,13 @@ in
         group = "james.gray";
         shell = bash;
       };
+      jasminegray = with pkgs; {
+        description = "Jasmine Gray (macos)";
+        extraGroups = [ "macos" ];
+        isNormalUser = true;
+        group = "jasminegray";
+        shell = bash;
+      };
       syncoid = with pkgs; {
         description = "Syncoid User";
         extraGroups = [ "wheel" ];
@@ -604,6 +631,7 @@ in
       syncoid = { };
       timemachine = { };
       "james.gray" = { };
+      jasminegray = { };
       macos = { gid = 1005; };
       www-data = { gid = 33; };
       immich = { gid = 980; };
