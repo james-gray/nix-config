@@ -554,7 +554,7 @@ in
         wantedBy = [ "timers.target" ];
         partOf = [ "scrutiny-collector-metrics.service" ];
         timerConfig = {
-          OnCalendar = "*:0/15";
+          OnCalendar = "0/3:00:00";
           Unit = "scrutiny-collector-metrics.service";
         };
       };
