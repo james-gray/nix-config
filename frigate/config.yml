@@ -51,10 +51,16 @@ cameras:
       filters:
         person:
           mask:
-            - 0,480,246,480,234,0,0,0
+            object_mask_1:
+              friendly_name: Object Mask 1 (person)
+              enabled: true
+              coordinates: 0,480,246,480,234,0,0,0
         car:
           mask:
-            - 640,266,532,263,525,317,640,334
+            object_mask_1:
+              friendly_name: Object Mask 1 (car)
+              enabled: true
+              coordinates: 640,266,532,263,525,317,640,334
       track:
         - person
         - cat
@@ -75,9 +81,18 @@ cameras:
         days: 0
     motion:
       mask:
-        - 0,1,0.384,1,0.366,0,0,0
-        - 0.715,0.008,0.248,0.008,0.246,0.055,0.715,0.056
-        - 0.828,0.552,0.82,0.66,0.996,0.693,0.998,0.553
-version: 0.17-0
+        motion_mask_1:
+          friendly_name: Motion Mask 1
+          enabled: true
+          coordinates: 0,1,0.384,1,0.366,0,0,0
+        motion_mask_2:
+          friendly_name: Motion Mask 2
+          enabled: true
+          coordinates: 0.715,0.008,0.248,0.008,0.246,0.055,0.715,0.056
+        motion_mask_3:
+          friendly_name: Motion Mask 3
+          enabled: true
+          coordinates: 0.828,0.552,0.82,0.66,0.996,0.693,0.998,0.553
+version: 0.18-0
 detect:
   enabled: true
