@@ -1,0 +1,16 @@
+services:
+  matter-server:
+    image: ghcr.io/home-assistant-libs/python-matter-server:stable
+    container_name: matter-server
+    restart: unless-stopped
+    # host networking is required for IPv6 mDNS / Matter commissioning
+    network_mode: host
+    security_opt:
+      - apparmor:unconfined
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - /tank9000/ds1/matter/data:/data
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=America/Vancouver
