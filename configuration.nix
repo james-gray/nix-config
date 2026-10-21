@@ -24,6 +24,10 @@ in
     ./modules/nginx.nix
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "immich-2.7.5"
+  ];
+
   # Boot configuration
   boot = {
     supportedFilesystems = [ "zfs" ];
